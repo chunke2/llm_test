@@ -1,0 +1,152 @@
++-----------------------+----------------------------------------------------+
+| Parameter             | Value                                              |
++-----------------------+----------------------------------------------------+
+| train data pattern    | dev/data/tinyshakespeare/tiny_shakespeare_train.bin |
+| val data pattern      | dev/data/tinyshakespeare/tiny_shakespeare_val.bin  |
+| output log file       | NULL                                               |
+| batch size B          | 4                                                  |
+| sequence length T     | 1024                                               |
+| learning rate         | 0.000300                                           |
+| val_loss_every        | 20                                                 |
+| val_max_steps         | 20                                                 |
+| sample_every          | 20                                                 |
+| genT                  | 64                                                 |
++-----------------------+----------------------------------------------------+
+| device                | NVIDIA GeForce RTX 3060 Laptop GPU                 |
+| TF32                  | enabled                                            |
++-----------------------+----------------------------------------------------+
+| max_sequence_length T | 1024                                               |
+| vocab_size V          | 50257                                              |
+| padded_vocab_size Vp  | 50304                                              |
+| num_layers L          | 12                                                 |
+| num_heads NH          | 12                                                 |
+| channels C            | 768                                                |
+| num_parameters        | 124475904                                          |
++-----------------------+----------------------------------------------------+
+| train_num_batches     | 74                                                 |
+| val_num_batches       | 8                                                  |
++-----------------------+----------------------------------------------------+
+allocated 474 MiB for model parameters
+allocated 5706 MiB for activations
+val loss 4.513886
+allocated 474 MiB for parameter gradients
+allocated 252 MiB for activation gradients
+allocated 474 MiB for AdamW optimizer state m
+allocated 474 MiB for AdamW optimizer state v
+step    1/74: train loss 4.287312 (6612.848455 ms, 619 tok/s)
+step    2/74: train loss 4.727437 (6385.250742 ms, 641 tok/s)
+step    3/74: train loss 4.392062 (6539.005623 ms, 626 tok/s)
+step    4/74: train loss 3.628313 (6328.093647 ms, 647 tok/s)
+step    5/74: train loss 3.717002 (6304.699943 ms, 649 tok/s)
+step    6/74: train loss 4.012999 (6339.767337 ms, 646 tok/s)
+step    7/74: train loss 4.110869 (6523.807663 ms, 627 tok/s)
+step    8/74: train loss 3.623419 (6722.373807 ms, 609 tok/s)
+step    9/74: train loss 3.964904 (6539.890716 ms, 626 tok/s)
+step   10/74: train loss 3.581072 (6318.976601 ms, 648 tok/s)
+step   11/74: train loss 4.027806 (6661.945573 ms, 614 tok/s)
+step   12/74: train loss 3.813231 (6506.779232 ms, 629 tok/s)
+step   13/74: train loss 4.028728 (6552.620049 ms, 625 tok/s)
+step   14/74: train loss 3.884779 (6275.041862 ms, 652 tok/s)
+step   15/74: train loss 3.712111 (6269.838130 ms, 653 tok/s)
+step   16/74: train loss 3.553521 (6271.620375 ms, 653 tok/s)
+step   17/74: train loss 3.986503 (6276.527151 ms, 652 tok/s)
+step   18/74: train loss 3.808747 (6272.133044 ms, 653 tok/s)
+step   19/74: train loss 3.533528 (6274.180634 ms, 652 tok/s)
+step   20/74: train loss 3.677928 (6272.253320 ms, 653 tok/s)
+val loss 3.725206
+generating:
+---
+O, but streets were now spurs:
+
+<|endoftext|>O<|endoftext|>O<|endoftext|>O<|endoftext|>GOICE:
+Well, ere you enter, there is portal,
+which you, ere you dream in your dreams, no two wrongs
+swpose. Thou hast proved us, and fled out ain't
+---
+step   21/74: train loss 3.608342 (6290.093002 ms, 651 tok/s)
+step   22/74: train loss 3.612875 (6271.939625 ms, 653 tok/s)
+step   23/74: train loss 3.147690 (6273.350166 ms, 652 tok/s)
+step   24/74: train loss 3.344410 (6283.601762 ms, 651 tok/s)
+step   25/74: train loss 3.705626 (6274.293578 ms, 652 tok/s)
+step   26/74: train loss 3.540150 (6278.145193 ms, 652 tok/s)
+step   27/74: train loss 3.843744 (6269.423910 ms, 653 tok/s)
+step   28/74: train loss 3.445808 (6282.954520 ms, 651 tok/s)
+step   29/74: train loss 3.317633 (6265.284780 ms, 653 tok/s)
+step   30/74: train loss 3.280528 (6262.069105 ms, 654 tok/s)
+step   31/74: train loss 3.154704 (6269.795868 ms, 653 tok/s)
+step   32/74: train loss 3.445012 (6266.583356 ms, 653 tok/s)
+step   33/74: train loss 3.566698 (6265.968045 ms, 653 tok/s)
+step   34/74: train loss 3.485987 (6269.628917 ms, 653 tok/s)
+step   35/74: train loss 3.722337 (6271.811958 ms, 653 tok/s)
+step   36/74: train loss 3.379305 (6276.357597 ms, 652 tok/s)
+step   37/74: train loss 3.200193 (6268.960065 ms, 653 tok/s)
+step   38/74: train loss 3.179360 (6278.716154 ms, 652 tok/s)
+step   39/74: train loss 3.601180 (6310.529262 ms, 649 tok/s)
+step   40/74: train loss 3.083597 (6268.042264 ms, 653 tok/s)
+val loss 3.594350
+generating:
+---
+Malisky seeks
+Daron, prince,
+
+<|endoftext|>PRINCE:
+Sir, how doth my cousin's son find a kinsman?
+Hast thou haste to give him proof of your nature or temper?
+Thy mind cannot often be seen,
+By the day thy brow^ or if
+---
+step   41/74: train loss 3.828727 (6276.815964 ms, 652 tok/s)
+step   42/74: train loss 3.363558 (6272.718235 ms, 652 tok/s)
+step   43/74: train loss 3.355098 (6268.673126 ms, 653 tok/s)
+step   44/74: train loss 3.418776 (6271.498403 ms, 653 tok/s)
+step   45/74: train loss 3.609429 (6258.157250 ms, 654 tok/s)
+step   46/74: train loss 3.131438 (6254.660584 ms, 654 tok/s)
+step   47/74: train loss 3.464439 (6260.533920 ms, 654 tok/s)
+step   48/74: train loss 3.974007 (6268.031262 ms, 653 tok/s)
+step   49/74: train loss 3.224483 (6251.559977 ms, 655 tok/s)
+step   50/74: train loss 3.417733 (6261.223860 ms, 654 tok/s)
+step   51/74: train loss 3.760525 (6261.330660 ms, 654 tok/s)
+step   52/74: train loss 3.768219 (6273.067083 ms, 652 tok/s)
+step   53/74: train loss 3.412198 (6257.914007 ms, 654 tok/s)
+step   54/74: train loss 3.390037 (6252.804258 ms, 655 tok/s)
+step   55/74: train loss 3.274645 (6266.454717 ms, 653 tok/s)
+step   56/74: train loss 3.261514 (6282.600340 ms, 651 tok/s)
+step   57/74: train loss 3.028284 (6259.321509 ms, 654 tok/s)
+step   58/74: train loss 3.478898 (6261.813455 ms, 654 tok/s)
+step   59/74: train loss 3.271262 (6252.864214 ms, 655 tok/s)
+step   60/74: train loss 3.496354 (6276.018354 ms, 652 tok/s)
+val loss 3.506995
+generating:
+---
+at the visitation of this time.
+A Jesu Mowbray:
+What, bricking this day, dear son,
+I do crave, you, Father? here it be, father,
+To mingle with me, to hear I follow my pace;
+And since here lies him,
+---
+step   61/74: train loss 3.212686 (6273.987347 ms, 652 tok/s)
+step   62/74: train loss 3.451624 (6264.800555 ms, 653 tok/s)
+step   63/74: train loss 3.371511 (6278.115785 ms, 652 tok/s)
+step   64/74: train loss 3.409098 (6258.400792 ms, 654 tok/s)
+step   65/74: train loss 3.579194 (6263.869176 ms, 653 tok/s)
+step   66/74: train loss 3.031072 (6259.942370 ms, 654 tok/s)
+step   67/74: train loss 3.296185 (6282.138497 ms, 652 tok/s)
+step   68/74: train loss 3.677231 (6268.067362 ms, 653 tok/s)
+step   69/74: train loss 3.297833 (6265.738858 ms, 653 tok/s)
+step   70/74: train loss 3.648090 (6261.895405 ms, 654 tok/s)
+step   71/74: train loss 3.568187 (6256.040944 ms, 654 tok/s)
+step   72/74: train loss 3.734935 (6254.135074 ms, 654 tok/s)
+step   73/74: train loss 3.824092 (6264.918860 ms, 653 tok/s)
+step   74/74: train loss 3.382805 (6261.767462 ms, 654 tok/s)
+val loss 3.493142
+generating:
+---
+BUCKINGHAM:
+He is most willing and inclined to procaverage,
+To guard the air. Do not master, withers, or yield the pair
+By the tortoise's heavy battery: quickly use
+As timed with both his master and ministers:
+Madam, do you yet
+---
+total average iteration time: 6307.393009 ms

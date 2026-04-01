@@ -1,0 +1,150 @@
++-----------------------+----------------------------------------------------+
+| Parameter             | Value                                              |
++-----------------------+----------------------------------------------------+
+| train data pattern    | dev/data/tinyshakespeare/tiny_shakespeare_train.bin |
+| val data pattern      | dev/data/tinyshakespeare/tiny_shakespeare_val.bin  |
+| output log file       | NULL                                               |
+| batch size B          | 4                                                  |
+| sequence length T     | 1024                                               |
+| learning rate         | 0.000300                                           |
+| val_loss_every        | 20                                                 |
+| val_max_steps         | 20                                                 |
+| sample_every          | 20                                                 |
+| genT                  | 64                                                 |
++-----------------------+----------------------------------------------------+
+| device                | NVIDIA GeForce RTX 3060 Laptop GPU                 |
+| TF32                  | enabled                                            |
++-----------------------+----------------------------------------------------+
+| max_sequence_length T | 1024                                               |
+| vocab_size V          | 50257                                              |
+| padded_vocab_size Vp  | 50304                                              |
+| num_layers L          | 12                                                 |
+| num_heads NH          | 12                                                 |
+| channels C            | 768                                                |
+| num_parameters        | 124475904                                          |
++-----------------------+----------------------------------------------------+
+| train_num_batches     | 74                                                 |
+| val_num_batches       | 8                                                  |
++-----------------------+----------------------------------------------------+
+allocated 474 MiB for model parameters
+allocated 5706 MiB for activations
+val loss 4.513831
+allocated 474 MiB for parameter gradients
+allocated 252 MiB for activation gradients
+allocated 474 MiB for AdamW optimizer state m
+allocated 474 MiB for AdamW optimizer state v
+step    1/74: train loss 4.287285 (5824.048863 ms, 703 tok/s)
+step    2/74: train loss 4.720029 (5558.066898 ms, 736 tok/s)
+step    3/74: train loss 4.388637 (5556.299497 ms, 737 tok/s)
+step    4/74: train loss 3.627836 (5552.710944 ms, 737 tok/s)
+step    5/74: train loss 3.717241 (5554.023923 ms, 737 tok/s)
+step    6/74: train loss 4.013627 (5559.104287 ms, 736 tok/s)
+step    7/74: train loss 4.110370 (5558.861300 ms, 736 tok/s)
+step    8/74: train loss 3.623362 (5555.062986 ms, 737 tok/s)
+step    9/74: train loss 3.965127 (5555.836396 ms, 737 tok/s)
+step   10/74: train loss 3.581256 (5559.385053 ms, 736 tok/s)
+step   11/74: train loss 4.027840 (5553.880318 ms, 737 tok/s)
+step   12/74: train loss 3.812754 (5563.198338 ms, 736 tok/s)
+step   13/74: train loss 4.028636 (5558.700648 ms, 736 tok/s)
+step   14/74: train loss 3.884469 (5564.597051 ms, 736 tok/s)
+step   15/74: train loss 3.711811 (5559.666229 ms, 736 tok/s)
+step   16/74: train loss 3.552697 (5552.716665 ms, 737 tok/s)
+step   17/74: train loss 3.987085 (5566.724715 ms, 735 tok/s)
+step   18/74: train loss 3.808629 (5555.494470 ms, 737 tok/s)
+step   19/74: train loss 3.534047 (5552.061047 ms, 737 tok/s)
+step   20/74: train loss 3.677526 (5559.220293 ms, 736 tok/s)
+val loss 3.724839
+generating:
+---
+O, but excellent speed, that will well drive out on these arms, and that shall by joy's livery entem our balance in that model, hence, to slow and
+hear them further: this motion to charity in gold is a large motion, wrathful time to
+apprehend one farewell;
+---
+step   21/74: train loss 3.608791 (5563.643231 ms, 736 tok/s)
+step   22/74: train loss 3.612512 (5563.080213 ms, 736 tok/s)
+step   23/74: train loss 3.147279 (5553.608595 ms, 737 tok/s)
+step   24/74: train loss 3.344294 (5557.853054 ms, 736 tok/s)
+step   25/74: train loss 3.706924 (5558.644778 ms, 736 tok/s)
+step   26/74: train loss 3.540211 (5556.686009 ms, 737 tok/s)
+step   27/74: train loss 3.843840 (5558.232428 ms, 736 tok/s)
+step   28/74: train loss 3.445467 (5558.410728 ms, 736 tok/s)
+step   29/74: train loss 3.317800 (5560.720108 ms, 736 tok/s)
+step   30/74: train loss 3.280893 (5562.695056 ms, 736 tok/s)
+step   31/74: train loss 3.154759 (5563.718529 ms, 736 tok/s)
+step   32/74: train loss 3.445756 (5553.744666 ms, 737 tok/s)
+step   33/74: train loss 3.567282 (5560.769438 ms, 736 tok/s)
+step   34/74: train loss 3.487284 (5555.352732 ms, 737 tok/s)
+step   35/74: train loss 3.721303 (5554.856949 ms, 737 tok/s)
+step   36/74: train loss 3.379937 (5555.526542 ms, 737 tok/s)
+step   37/74: train loss 3.199762 (5553.752999 ms, 737 tok/s)
+step   38/74: train loss 3.177632 (5564.819053 ms, 736 tok/s)
+step   39/74: train loss 3.601351 (5553.168404 ms, 737 tok/s)
+step   40/74: train loss 3.083835 (5565.743618 ms, 735 tok/s)
+val loss 3.594407
+generating:
+---
+UKLINMER:
+Have I thou, beary Anne?
+O, thou art too good of heart and too low of moneyage.
+I will do this nicely, would you glass such a fresh pint of gall.
+DUKE WATSON:
+Here, I planted my mason's
+---
+step   41/74: train loss 3.829565 (5564.652840 ms, 736 tok/s)
+step   42/74: train loss 3.363587 (5557.098644 ms, 737 tok/s)
+step   43/74: train loss 3.356167 (5553.128435 ms, 737 tok/s)
+step   44/74: train loss 3.420249 (5551.971898 ms, 737 tok/s)
+step   45/74: train loss 3.610428 (5559.238903 ms, 736 tok/s)
+step   46/74: train loss 3.129663 (5567.445081 ms, 735 tok/s)
+step   47/74: train loss 3.464384 (5559.182390 ms, 736 tok/s)
+step   48/74: train loss 3.975605 (5554.984374 ms, 737 tok/s)
+step   49/74: train loss 3.225045 (5556.018122 ms, 737 tok/s)
+step   50/74: train loss 3.417175 (5559.079371 ms, 736 tok/s)
+step   51/74: train loss 3.761141 (5557.408983 ms, 737 tok/s)
+step   52/74: train loss 3.768370 (5556.971559 ms, 737 tok/s)
+step   53/74: train loss 3.411612 (5554.131113 ms, 737 tok/s)
+step   54/74: train loss 3.388925 (5553.407123 ms, 737 tok/s)
+step   55/74: train loss 3.275598 (5559.412660 ms, 736 tok/s)
+step   56/74: train loss 3.261483 (5560.085305 ms, 736 tok/s)
+step   57/74: train loss 3.028905 (5563.659356 ms, 736 tok/s)
+step   58/74: train loss 3.479459 (5555.347210 ms, 737 tok/s)
+step   59/74: train loss 3.271179 (5564.177187 ms, 736 tok/s)
+step   60/74: train loss 3.496715 (5555.677198 ms, 737 tok/s)
+val loss 3.506641
+generating:
+---
+
+Ladies and gentlemen,
+I as come from my own quarters here
+And make an entrance with my mother, my brother,
+Nurse Isabel, and
+Little lips her husband, to safeguard and bid her
+Display her daughter, the trees
+That bear her winter night.
+
+<|endoftext|>Ayoming:
+---
+step   61/74: train loss 3.210919 (5561.043199 ms, 736 tok/s)
+step   62/74: train loss 3.450971 (5569.122352 ms, 735 tok/s)
+step   63/74: train loss 3.373016 (5554.832017 ms, 737 tok/s)
+step   64/74: train loss 3.408633 (5557.607227 ms, 737 tok/s)
+step   65/74: train loss 3.578822 (5554.901125 ms, 737 tok/s)
+step   66/74: train loss 3.030921 (5554.661365 ms, 737 tok/s)
+step   67/74: train loss 3.295625 (5556.722325 ms, 737 tok/s)
+step   68/74: train loss 3.677235 (5561.060928 ms, 736 tok/s)
+step   69/74: train loss 3.298367 (5551.982471 ms, 737 tok/s)
+step   70/74: train loss 3.646890 (5558.420988 ms, 736 tok/s)
+step   71/74: train loss 3.567285 (5560.928299 ms, 736 tok/s)
+step   72/74: train loss 3.731523 (5559.499953 ms, 736 tok/s)
+step   73/74: train loss 3.824468 (5557.269607 ms, 737 tok/s)
+step   74/74: train loss 3.381672 (5554.332139 ms, 737 tok/s)
+val loss 3.492018
+generating:
+---
+BUCKINGHAM:
+He is back: call upon him.
+Sir, to put off the word, third eye is a free thing;
+And she here shows evidence of the sweetstar which can last a mile:
+And Susan of Castle William's boy beded: And to put off the word
+---
+total average iteration time: 5561.758768 ms
