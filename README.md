@@ -1,12 +1,42 @@
-Commands
-make train_gpt2fp32cu
-./train_gpt2fp32cu
-make train_gpt2fp32cublas
-./train_gpt2fp32cu
-make train_gpt2fp32cublast
-./train_gpt2fp32cu
+# LLM.c GPT-2 Training Optimization
 
-Below are original README
+This is an optimized implementation based on Andrej Karpathy's [llm.c](https://github.com/karpathy/llm.c) project, focusing on accelerating GPT-2 training through CUDA kernel optimization and performance profiling.
+
+## Project Overview
+
+**Goal:** Optimize GPT-2 training performance through CUDA kernel optimization, leveraging tools like Nsight Systems and Nsight Compute for detailed profiling.
+
+**Hardware:** RTX 5070 Ti (70 SMs, 1536 max threads/SM)
+
+**Key Findings:**
+- Baseline: 142.7 ms/iteration, 28,680 token/s throughput
+- Primary bottleneck: `matmul_forward_kernel4` occupies 61.6% of GPU time
+- Root cause: High register pressure (128 registers/thread) → Low occupancy (33.3%) → Latency issues
+
+For detailed technical analysis, profiling results, and optimization directions, see the **[Experiment Report](./report/llm训练优化实验.md)** (in Chinese).
+
+## Project Structure
+
+```
+llm_test/
+├── report/              # Detailed experiment report (includes NCU profiling, kernel analysis, optimization strategies)
+├── results/             # Experiment result data (generated from remote execution)
+├── dev/                 # Original llm.c dev utilities
+├── llmc/                # CUDA kernel headers
+├── scripts/             # Training scripts
+├── train_gpt2.cu        # Main GPT-2 training kernel
+├── train_gpt2.py        # PyTorch reference implementation
+└── ...
+```
+
+**Note:** The profiling data and result images in `report/` were generated on remote GPU instances and are not reproducible from this repository alone. They serve as reference documentation for the optimization analysis.
+
+---
+
+## Original llm.c Documentation
+
+Below is the original README from llm.c:
+
 # llm.c
 
 LLMs in simple, pure C/CUDA with no need for 245MB of PyTorch or 107MB of cPython. Current focus is on pretraining, in particular reproducing the [GPT-2](https://github.com/openai/gpt-2) and [GPT-3](https://arxiv.org/abs/2005.14165) miniseries, along with a parallel PyTorch reference implementation in [train_gpt2.py](train_gpt2.py). You'll recognize this file as a slightly tweaked [nanoGPT](https://github.com/karpathy/nanoGPT), an earlier project of mine. Currently, llm.c is a bit faster than PyTorch Nightly (by about 7%). In addition to the bleeding edge mainline code in [train_gpt2.cu](train_gpt2.cu), we have a simple reference CPU fp32 implementation in ~1,000 lines of clean code in one file [train_gpt2.c](train_gpt2.c). I'd like this repo to only maintain C and CUDA code. Ports to other languages or repos are very welcome, but should be done in separate repos, and I am happy to link to them below in the "notable forks" section. Developer coordination happens in the [Discussions](https://github.com/karpathy/llm.c/discussions) and on Discord, either the `#llmc` channel on the [Zero to Hero](https://discord.gg/3zy8kqD9Cp) channel, or on `#llmdotc` on [GPU MODE](https://discord.gg/gpumode) Discord.
