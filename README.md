@@ -29,7 +29,7 @@ llm_test/
 └── ...
 ```
 
-**Note:** The profiling data and result images in `report/` were generated on remote GPU instances and are not reproducible from this repository alone. They serve as reference documentation for the optimization analysis.
+**Note:** The profiling data and result images in `report/` were generated on remote GPU instances and are not reproducible from this repository alone. All versioned Nsight Compute (`.ncu-rep`) reports are stored in `results/` for reference.
 
 ---
 
