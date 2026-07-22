@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPT-2 训练优化实验数据看板 - RTX 4090</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #0d1117; color: #c9d1d9; padding: 24px; line-height: 1.7; }
+  h1 { font-size: 22px; font-weight: 600; color: #58a6ff; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #8b949e; margin-bottom: 24px; }
+  h2 { font-size: 16px; font-weight: 600; color: #79c0ff; margin: 28px 0 12px 0; border-bottom: 1px solid #21262d; padding-bottom: 8px; }
+  .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .metric { display: flex; flex-direction: column; align-items: center; padding: 16px; background: #21262d; border-radius: 6px; }
+  .metric-value { font-size: 28px; font-weight: 700; font-family: 'SF Mono', 'Fira Code', monospace; }
+  .metric-label { font-size: 12px; color: #8b949e; margin-top: 4px; }
+  .green { color: #3fb950; }
+  .red { color: #f85149; }
+  .yellow { color: #d29922; }
+  .blue { color: #58a6ff; }
+  .purple { color: #bc8cff; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #21262d; color: #8b949e; font-weight: 600; text-align: left; padding: 10px 12px; border-bottom: 2px solid #30363d; white-space: nowrap; }
+  td { padding: 10px 12px; border-bottom: 1px solid #21262d; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; }
+  tr:hover { background: #1c2128; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .tag-ok { background: rgba(63,185,80,0.15); color: #3fb950; }
+  .tag-fail { background: rgba(248,81,73,0.15); color: #f85149; }
+  .tag-fast { background: rgba(88,166,255,0.15); color: #58a6ff; }
+  .tag-slow { background: rgba(210,153,34,0.15); color: #d29922; }
+  .bar-container { display: flex; align-items: center; gap: 8px; }
+  .bar { height: 20px; border-radius: 3px; min-width: 2px; }
+  .bar-label { font-size: 11px; font-family: monospace; white-space: nowrap; }
+  .stall-bar { display: inline-block; height: 16px; border-radius: 2px; vertical-align: middle; }
+  .conclusion { background: #161b22; border-left: 3px solid #f85149; padding: 16px 20px; border-radius: 0 8px 8px 0; margin-bottom: 12px; }
+  .conclusion.new { border-left-color: #58a6ff; }
+  .conclusion strong { color: #e6edf3; }
+  .env-info { font-size: 12px; color: #8b949e; }
+  .env-info span { color: #c9d1d9; }
+</style>
+</head>
+<body>
+
+<h1>GPT-2 训练优化实验数据看板</h1>
+<p class="subtitle">RTX 4090 (sm_89) | CUDA 12.4.1 | ncu 2024.1.1 | 锁频 2520MHz | llm.c @ f1e2ace | 2026-07-22</p>
+
+<!-- 环境信息 -->
+<div class="card">
+  <div class="env-info">
+    <strong>环境清单：</strong>
+    GPU: <span>RTX 4090 24GB</span> |
+    Driver: <span>580.95.05</span> |
+    CUDA: <span>12.4.1 (nvcc V12.4.131)</span> |
+    ncu: <span>2024.1.1.0</span> |
+    nsys: <span>2023.4.4</span> |
+    gcc: <span>11.4.0</span> |
+    OS: <span>Ubuntu 22.04.5 LTS</span> |
+    Kernel: <span>6.8.0-59-generic</span> |
+    GPU Clock: <span>locked 2520 MHz, persistence on</span> |
+    Model: <span>GPT-2 124M, B=4, T=1024, tinyshakespeare</span> |
+    统计规范: <span>n=69 (drop 5 warmup), mean±std</span>
+  </div>
+</div>
+
+<!-- 基线核心指标 -->
+<h2>基线 (V0) 核心指标</h2>
+<div class="card">
+  <div class="grid2" style="grid-template-columns: repeat(5, 1fr);">
+    <div class="metric">
+      <div class="metric-value blue">95.63</div>
+      <div class="metric-label">ms/iter (±0.04)</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value green">42,830</div>
+      <div class="metric-label">tok/s (±20)</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value yellow">123</div>
+      <div class="metric-label">registers/thread</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value red">33.3%</div>
+      <div class="metric-label">occupancy (理论)</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">4.29→3.38</div>
+      <div class="metric-label">loss (train)</div>
+    </div>
+  </div>
+</div>
+
+<!-- P0 瓶颈定位 -->
+<h2>P0 瓶颈定位 (nsys + ncu)</h2>
+<div class="card">
+  <table>
+    <tr><th>Kernel</th><th>GPU Time %</th><th>总时间</th><th>调用次数</th><th>备注</th></tr>
+    <tr><td style="color:#f85149;font-weight:600">matmul_forward_kernel4</td><td><b>53.6%</b></td><td>9.64s</td><td>17,934</td><td>手写 FP32 FMA, StdDev 971us (碎片化)</td></tr>
+    <tr><td>cutlass tensorop (attention TF32)</td><td>~20%</td><td>3.6s</td><td>~15k</td><td>cuBLAS batched GEMM, TF32 Tensor Core</td></tr>
+    <tr><td>softmax_forward_kernel5</td><td>5.3%</td><td>0.96s</td><td>4,392</td><td>手写 softmax</td></tr>
+    <tr><td>gelu_forward</td><td>1.7%</td><td>0.30s</td><td>4,392</td><td>手写 GELU</td></tr>
+  </table>
+</div>
+
+<!-- 根因链条 -->
+<div class="card">
+  <table>
+    <tr><th>指标</th><th>V0 Baseline 值</th><th>含义</th></tr>
+    <tr><td>Registers Per Thread</td><td style="color:#f85149"><b>123</b></td><td>8×8=64 float 累加器 + float4 rhs[8]=32 → 核心瓶颈</td></tr>
+    <tr><td>Block Limit (Registers)</td><td style="color:#f85149"><b>2</b></td><td>123×256=31,488 regs/block; 65,536/31,488≈2</td></tr>
+    <tr><td>Theoretical Occupancy</td><td style="color:#f85149"><b>33.33%</b></td><td>2 blocks × 256 threads / 32 = 16 warps; 16/48=33.3%</td></tr>
+    <tr><td>Achieved Occupancy</td><td><b>25.30%</b></td><td>实际更低 (workload 分布不均)</td></tr>
+    <tr><td>Block Limit (Shared Mem)</td><td style="color:#d29922">3</td><td>32.77KB/block → 次要约束 (非根因)</td></tr>
+    <tr><td>Compute (SM) Throughput</td><td><b>44.56%</b></td><td rowspan="2">均 <60% → <span style="color:#d29922">Latency Issue</span> (非 compute-bound 也非 memory-bound)</td></tr>
+    <tr><td>Memory Throughput</td><td><b>44.68%</b></td></tr>
+  </table>
+</div>
+
+<!-- Warp Stall 构成 -->
+<div class="card">
+  <h3 style="font-size:14px;color:#79c0ff;margin-bottom:12px;">Warp Stall 构成 (ratio per issue active, 越大越严重)</h3>
+  <table>
+    <tr><th>Stall 原因</th><th>Launch 1 (小矩阵)</th><th>Launch 2 (大矩阵)</th><th>含义</th></tr>
+    <tr><td style="color:#f85149;font-weight:600">Stall Not Selected</td>
+      <td><span class="stall-bar" style="background:#f85149;width:75px"></span> 1.50</td>
+      <td><span class="stall-bar" style="background:#f85149;width:96px"></span> 1.93</td>
+      <td>Warp 就绪但 scheduler 无 eligible warp → occupancy 不足的铁证</td></tr>
+    <tr><td>Stall Short Scoreboard</td>
+      <td><span class="stall-bar" style="background:#d29922;width:34px"></span> 0.67</td>
+      <td><span class="stall-bar" style="background:#d29922;width:37px"></span> 0.73</td>
+      <td>等 shared memory / L1 返回</td></tr>
+    <tr><td>Stall MIO Throttle</td>
+      <td><span class="stall-bar" style="background:#8b949e;width:25px"></span> 0.50</td>
+      <td><span class="stall-bar" style="background:#8b949e;width:37px"></span> 0.73</td>
+      <td>MIO 指令队列满</td></tr>
+    <tr><td>Stall Long Scoreboard</td>
+      <td><span class="stall-bar" style="background:#8b949e;width:22px"></span> 0.43</td>
+      <td><span class="stall-bar" style="background:#8b949e;width:15px"></span> 0.30</td>
+      <td>等 global memory (DRAM 延迟)</td></tr>
+  </table>
+</div>
+
+<!-- P1 手写优化对比 -->
+<h2>P1 手写优化版本对比</h2>
+<div class="card">
+  <table>
+    <tr>
+      <th>版本</th><th>改动</th><th>ms/iter</th><th>vs V0</th><th>正确性</th>
+      <th>Regs</th><th>Occ.(理论)</th><th>Occ.(实测)</th><th>Compute</th><th>Memory</th><th>主要 Stall</th>
+    </tr>
+    <tr>
+      <td style="font-weight:600"><b>V0</b> Baseline</td>
+      <td>8×8 tile, lb(2)</td>
+      <td class="blue"><b>95.63</b>±0.04</td>
+      <td>—</td>
+      <td><span class="tag tag-ok">OK</span></td>
+      <td>123</td><td>33.3%</td><td>25.3%</td><td>44.6%</td><td>44.7%</td>
+      <td>Not Selected (1.50)</td>
+    </tr>
+    <tr>
+      <td style="font-weight:600">V1</td>
+      <td>4×4 tile, lb(2)</td>
+      <td class="red"><b>107.93</b>±0.05</td>
+      <td class="red">+12.9%</td>
+      <td><span class="tag tag-ok">OK</span></td>
+      <td style="color:#f85149">126↑</td><td>33.3%</td><td>31.9%</td><td>46.4%</td><td style="color:#f85149">73.7%</td>
+      <td>Short Scoreboard (1.44)</td>
+    </tr>
+    <tr>
+      <td style="font-weight:600">V2</td>
+      <td>8×8 tile, lb(3)</td>
+      <td class="red"><b>228.05</b>±0.09</td>
+      <td class="red">+138.5%</td>
+      <td><span class="tag tag-ok">OK</span></td>
+      <td style="color:#3fb950">80↓</td><td style="color:#3fb950">50.0%</td><td>25.2%</td><td style="color:#f85149">22.1%</td><td style="color:#f85149">83.7%</td>
+      <td style="color:#f85149">Local mem spill (91%)</td>
+    </tr>
+    <tr>
+      <td style="font-weight:600">V3</td>
+      <td>4×4 tile, lb(3)</td>
+      <td class="red"><b>104.55</b>±0.16</td>
+      <td class="red">+9.3%</td>
+      <td><span class="tag tag-ok">OK</span></td>
+      <td>~80</td><td style="color:#3fb950">50.0%</td><td>~32%</td><td>—</td><td>—</td>
+      <td>Spill (less than V2)</td>
+    </tr>
+    <tr>
+      <td style="font-weight:600">V4</td>
+      <td>8×8 + pad[33]</td>
+      <td class="red">FAILED</td>
+      <td>—</td>
+      <td><span class="tag tag-fail">FAIL</span></td>
+      <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+      <td style="color:#f85149">float4 misalignment</td>
+    </tr>
+  </table>
+</div>
+
+<!-- 性能对比柱状图 -->
+<div class="card">
+  <h3 style="font-size:14px;color:#79c0ff;margin-bottom:16px;">训练迭代时间对比 (ms/iter, 越低越好)</h3>
+  <div style="display:flex;flex-direction:column;gap:10px;">
+    <div class="bar-container">
+      <span class="bar-label" style="width:80px;">V0 基线</span>
+      <div class="bar" style="background:#58a6ff;width:95.63px;min-width:95.63px;"></div>
+      <span class="bar-label blue">95.63ms</span>
+    </div>
+    <div class="bar-container">
+      <span class="bar-label" style="width:80px;">V1 4×4</span>
+      <div class="bar" style="background:#f85149;width:107.93px;"></div>
+      <span class="bar-label red">107.93ms (+12.9%)</span>
+    </div>
+    <div class="bar-container">
+      <span class="bar-label" style="width:80px;">V2 lb(3)</span>
+      <div class="bar" style="background:#f85149;width:228.05px;"></div>
+      <span class="bar-label red">228.05ms (+138.5%)</span>
+    </div>
+    <div class="bar-container">
+      <span class="bar-label" style="width:80px;">V3 4×4+lb3</span>
+      <div class="bar" style="background:#f85149;width:104.55px;"></div>
+      <span class="bar-label red">104.55ms (+9.3%)</span>
+    </div>
+  </div>
+</div>
+
+<!-- P2 精度×架构对比 -->
+<h2>P2 精度 × 架构对比</h2>
+<div class="card">
+  <table>
+    <tr>
+      <th>版本</th><th>matmul 路径</th><th>matmul 精度</th><th>Tensor Core</th><th>attention 精度</th>
+      <th>ms/iter</th><th>vs V0</th><th>正确性</th><th>nsys kernel 名</th>
+    </tr>
+    <tr>
+      <td style="font-weight:600"><b>V0</b></td>
+      <td>手写 kernel4 (8×8)</td>
+      <td>FP32 FMA</td>
+      <td><span class="tag tag-fail">No</span></td>
+      <td>TF32</td>
+      <td class="blue"><b>95.63</b></td>
+      <td>—</td>
+      <td><span class="tag tag-ok">OK</span></td>
+      <td>matmul_forward_kernel4</td>
+    </tr>
+    <tr>
+      <td style="font-weight:600"><b>V5</b></td>
+      <td>cuBLAS SGEMM</td>
+      <td style="color:#bc8cff">TF32</td>
+      <td><span class="tag tag-ok">Yes</span></td>
+      <td>TF32</td>
+      <td class="green"><b>82.17</b>±0.05</td>
+      <td class="green">-14.1%</td>
+      <td><span class="tag tag-ok">OK</span></td>
+      <td style="color:#bc8cff">cutlass_80_tensorop_s1688gemm</td>
+    </tr>
+    <tr>
+      <td style="font-weight:600"><b>V6</b></td>
+      <td>cuBLAS SGEMM</td>
+      <td>FP32 FMA</td>
+      <td><span class="tag tag-fail">No</span></td>
+      <td>FP32</td>
+      <td class="red"><b>108.32</b></td>
+      <td class="red">+13.3%</td>
+      <td><span class="tag tag-ok">OK</span></td>
+      <td>ampere_sgemm + cutlass_80_simt_sgemm</td>
+    </tr>
+  </table>
+</div>
+
+<!-- 精度对比柱状图 -->
+<div class="card">
+  <h3 style="font-size:14px;color:#79c0ff;margin-bottom:16px;">精度 × 架构对比 (ms/iter)</h3>
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <div class="bar-container">
+      <span class="bar-label" style="width:120px;">V0 手写 FP32</span>
+      <div class="bar" style="background:#58a6ff;width:95.63px;min-width:95.63px;"></div>
+      <span class="bar-label blue">95.63ms — 基线</span>
+    </div>
+    <div class="bar-container">
+      <span class="bar-label" style="width:120px;">V5 cuBLAS TF32</span>
+      <div class="bar" style="background:#3fb950;width:82.17px;min-width:82.17px;"></div>
+      <span class="bar-label green">82.17ms (-14.1%) — 但精度降级</span>
+    </div>
+    <div class="bar-container">
+      <span class="bar-label" style="width:120px;">V6 cuBLAS FP32</span>
+      <div class="bar" style="background:#f85149;width:108.32px;min-width:108.32px;"></div>
+      <span class="bar-label red">108.32ms (+13.3%) — 同精度反而更慢</span>
+    </div>
+  </div>
+</div>
+
+<!-- 核心结论 -->
+<h2>核心结论</h2>
+
+<div class="conclusion">
+  <strong>1. 手写优化在 4090 上全部失败</strong><br>
+  baseline 已是编译器在 Ada (sm_89) 上的最优决策。tile 缩小不降反升寄存器（123→126），launch_bounds(3) 导致 spill，padding 修 bank conflict 但破坏 float4 对齐。<br>
+  <span style="color:#f85149">旧报告在 5070 Ti 上的结论（V2 快 21%、V4 快 25%）在 4090 上完全不成立。</span>
+</div>
+
+<div class="conclusion">
+  <strong>2. 精度混比是旧报告的致命错误（实证）</strong><br>
+  cuBLAS TF32 (82ms) 确实比手写 FP32 (96ms) 快 14%，但 nsys 确认它用的是 <code>cutlass_80_tensorop_s1688gemm</code> (TF32 Tensor Core MMA)。<br>
+  禁用 TF32 后，cuBLAS 纯 FP32 (108ms) <span style="color:#f85149">反而比手写慢 13%</span>。<br>
+  旧报告"cuBLASLt 换 MMA 指令是加速来源"的结论是 <span style="color:#f85149">精度混比导致的错误归因</span>——加速来自精度降低 (TF32 19bit vs FP32 23bit mantissa)，非算法优势。
+</div>
+
+<div class="conclusion">
+  <strong>3. bank conflict fix 与 float4 alignment 是互斥约束</strong><br>
+  padding=33 修复 bank conflict（非 4 倍数错开 bank），但 stride=33×4=132 字节不是 16 的整数倍，破坏 float4 对齐 → cuBLAS 崩溃。<br>
+  padding=36（旧报告尝试的）保持对齐但不修 bank conflict（36 是 4 的倍数，bank conflict 照旧）。<br>
+  <span style="color:#d29922">在 float4 访问模式下，这两个优化目标是互斥的——这是一个架构级约束，旧报告未发现。</span>
+</div>
+
+<div class="conclusion new">
+  <strong>4. 4090 vs 5070 Ti 编译器行为差异</strong><br>
+  同一份 <code>vals[4][4]</code> 代码，在 5070 Ti (Blackwell sm_120) 上编译器降到 108 regs（旧报告数据），在 4090 (Ada sm_89) 上反而升到 126 regs。<br>
+  这说明 <span style="color:#58a6ff">不同架构的编译器 register allocation 策略不同，旧报告的优化结论不可跨架构迁移</span>。
+</div>
+
+<!-- 数据文件清单 -->
+<h2>原始数据文件清单</h2>
+<div class="card">
+  <table>
+    <tr><th>文件</th><th>大小</th><th>说明</th></tr>
+    <tr><td>env_manifest.txt</td><td>54KB</td><td>环境清单 (nvidia-smi -q + 支持频率 + 锁频 + 工具链版本)</td></tr>
+    <tr><td>baseline_v0.log ~ v6_train.log</td><td>8KB each</td><td>各版本训练日志 (74 steps, 含逐 step ms/tok/loss)</td></tr>
+    <tr><td>baseline_summary.txt</td><td>488B</td><td>基线摘要</td></tr>
+    <tr><td>P0_root_cause_report.txt</td><td>1KB</td><td>瓶颈根因报告</td></tr>
+    <tr><td>P1_summary.txt</td><td>1.8KB</td><td>P1 手写优化对比表+结论</td></tr>
+    <tr><td>P2_summary.txt</td><td>1.2KB</td><td>P2 精度×架构对比表+结论</td></tr>
+    <tr><td>baseline_matmul_ncu.ncu-rep</td><td>1.1MB</td><td>V0 baseline matmul ncu 报告 (可用 Nsight Compute GUI 打开)</td></tr>
+    <tr><td>v1_matmul_ncu.ncu-rep</td><td>819KB</td><td>V1 (4×4 tile) ncu 报告</td></tr>
+    <tr><td>v2_matmul_ncu.ncu-rep</td><td>764KB</td><td>V2 (launch_bounds 3) ncu 报告</td></tr>
+    <tr><td>baseline_nsys.nsys-rep</td><td>5.5MB</td><td>V0 nsys 报告 (可用 Nsight Systems GUI 打开)</td></tr>
+    <tr><td>v5_nsys.nsys-rep</td><td>6.7MB</td><td>V5 (cuBLAS TF32) nsys 报告</td></tr>
+    <tr><td>v6_nsys.nsys-rep</td><td>9.1MB</td><td>V6 (cuBLAS FP32) nsys 报告</td></tr>
+  </table>
+</div>
+
+</body>
+</html>

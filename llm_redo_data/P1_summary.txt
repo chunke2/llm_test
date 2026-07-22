@@ -1,0 +1,22 @@
+=== P1 手写优化完整对比表 (RTX 4090, 锁频2520MHz, CUDA 12.4) ===
+
+| 版本 | 改动 | ms/iter(mean±std) | tok/s | delta | 正确性 | regs | occupancy(理论) | occupancy(实测) | compute | memory | 主要stall |
+|------|------|-------------------|-------|-------|--------|------|----------------|----------------|---------|--------|-----------|
+| V0 Baseline | 8x8 tile, lb(2) | 95.63±0.04 | 42830 | - | OK | 123 | 33.3% | 25.3% | 44.6% | 44.7% | Not Selected(1.50) |
+| V1 | 4x4 tile, lb(2) | 107.93±0.05 | 37949 | +12.9% | OK | 126 | 33.3% | 31.9% | 46.4% | 73.7% | Short Scoreboard(1.44) |
+| V2 | 8x8 tile, lb(3) | 228.05±0.09 | 17960 | +138.5% | OK | 80 | 50.0% | 25.2% | 22.1% | 83.7% | local mem spill(91% speedup) |
+| V3 | 4x4 tile, lb(3) | 104.55±0.16 | 39182 | +9.3% | OK | ~80 | 50.0% | ~32% | - | - | spill(less than V2) |
+| V4 | 8x8 tile+pad[33] | FAILED | - | - | cuBLAS err | - | - | - | - | - | float4 misalignment |
+
+=== P1 核心结论 ===
+1. 4090上baseline已是编译器最优配置,所有传统优化手段均无法超越:
+   - tile缩小: 编译器不降反升reg(123->126),数据复用率降4倍,Memory throughput飙升(44.7%->73.7%)
+   - launch_bounds(3): 8x8的64个累加器无法压入85reg,spill到local memory导致5x减速
+   - launch_bounds(3)+4x4: spill减轻但仍比baseline慢9.3%
+   - padding=33: 修bank conflict但破坏float4对齐(stride 132不是16的倍数)
+2. 旧报告在5070Ti上的结论在4090上不成立:
+   - 旧报告V2(4x4)快21% -> 4090上慢12.9%
+   - 旧报告V4(lb3)快25% -> 4090上慢138%(8x8)/9.3%(4x4)
+3. 根因: Ada(sm_89)与Blackwell(sm_120)的编译器register allocation策略不同
+   - 同样的vals[4][4]在5070Ti可能降到108reg,在4090反而升到126reg
+4. bank conflict fix与float4 alignment是互斥约束(非4倍数修bank,4倍数保对齐)

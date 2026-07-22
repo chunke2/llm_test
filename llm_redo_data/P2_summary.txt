@@ -1,0 +1,20 @@
+=== P2 精度×架构对比 (RTX 4090, 锁频2520MHz) ===
+
+| 版本 | matmul路径 | matmul精度 | Tensor Core | attention精度 | 总时间(ms) | vs V0 | 正确性 |
+|------|-----------|-----------|-------------|--------------|-----------|-------|--------|
+| V0 | 手写kernel4(8x8) | FP32 FMA | No | TF32 | 95.63±0.04 | - | OK |
+| V5 | cuBLAS SGEMM | TF32 | Yes | TF32 | 82.17±0.05 | -14.1% | OK |
+| V6 | cuBLAS SGEMM | FP32 FMA | No | FP32 | 108.32 | +13.3% | OK |
+
+nsys kernel确认:
+  V5 matmul kernel: cutlass_80_tensorop_s1688gemm (TF32 Tensor Core MMA)
+  V6 matmul kernel: ampere_sgemm + cutlass_80_simt_sgemm (FP32 SIMT FMA, no Tensor Core)
+
+=== P2 核心结论 ===
+1. [精度公平对比] cuBLAS纯FP32(V6, 108ms)比手写FP32(V0, 96ms)慢13%
+   -> 同精度下cuBLAS并无优势,手写kernel在4090上已接近最优
+2. [TF32加速来源] cuBLAS TF32(V5, 82ms)比手写FP32(V0, 96ms)快14%
+   -> 但这是精度降低(TF32:19bit mantissa vs FP32:23bit)换来的,不是架构优势
+3. [旧报告核心错误实证] 旧报告称cuBLASLt换MMA指令是1.21x加速来源
+   -> 实际:同精度(FP32)下cuBLAS更慢;TF32的加速来自精度降低,非算法优势
+   -> 旧报告的精度混比(FP32手写 vs TF32 cuBLASLt)导致结论错误

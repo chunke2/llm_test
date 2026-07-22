@@ -1,0 +1,21 @@
+=== P0 根因报告: matmul_forward_kernel4 ===
+Date: 2026-07-22 | RTX 4090 锁频2520MHz | ncu 2024.1.1 (--set full, lock base)
+
+[瓶颈定位 - nsys]
+matmul_forward_kernel4: 53.6% GPU time (9.64s/17934 launches), StdDev 971us (调用碎片化)
+cutlass tensorop(attention TF32 batched GEMM)合计~20%, softmax 5.3%
+
+[根因链条 - ncu]
+Registers Per Thread: 123
+Block Limit Registers: 2  (123x256=31,488 regs/block; 65536/31488≈2)
+Theoretical Occupancy: 33.33% | Achieved: 25.30%
+Compute(SM): 44.56% | Memory: 44.68%  -> latency issue (均<60%)
+SharedMem/Block: 32.77KB -> Block Limit SharedMem: 3 (次要约束)
+
+[Warp Stall 构成 ratio/issue_active, 越大越严重]
+launch1(小矩阵): not_selected=1.50(最大) short_sb=0.67 mio=0.50 long_sb=0.43
+launch2(大矩阵): not_selected=1.93(最大) short_sb=0.73 mio=0.73 long_sb=0.30
+-> not_selected 最大 = occupancy 不足的直接证据
+
+[结论] 根因=寄存器压力(123 regs, 8x8=64 float累加器+float4 rhs) -> occupancy33% -> latency无法隐藏
+[V1方向] tile 8x8->4x4 降register 提升occupancy

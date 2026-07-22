@@ -1,0 +1,11 @@
+=== BASELINE V0 (原版 matmul_forward_kernel4, 8x8 tile) ===
+Date: 2026-07-22
+GPU: RTX 4090 (sm_89), locked 2520MHz, persistence on
+Config: B=4, T=1024, GPT-2 124M, tinyshakespeare, lr=3e-4, seed默认
+Precision: matmul_forward_kernel4=FP32 FMA(手写); attention(cuBLAS batched)=TF32
+llm.c commit: f1e2ace
+
+ms/iter : mean=95.63  std=0.04  min=95.56  max=95.73  (n=69, drop 5 warmup)
+tok/s   : mean=42830  std=20
+loss    : 4.2873 -> 3.3820
+program total average iteration time: 95.65 ms
