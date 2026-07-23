@@ -1,0 +1,59 @@
+=== Day 2 (2026-07-23) 发散优化 + 测量校准 (RTX 4090, 重新锁频2520MHz, CUDA 12.4) ===
+
+[0] 环境校准
+重租同一台 VM (74.14.63.213:44582)，数据/源码完好。重新锁频后基线复测:
+V0 = 95.84 / 95.67±0.01 ms  (Day1: 95.65ms, 差异<0.2%, 环境可比)
+
+[1] 重要勘误: Day1 的 r84 (-2.4%) 不成立 —— 是时钟漂移，非真实加速
+交错 A/B x3 (同一 Day1 二进制, 前后确认 2520MHz):
+  V0:  95.666 / 95.666 / 95.662 ms
+  r84: 95.645 / 95.660 / 95.676 ms      -> 差异 = 0, r84 无效
+根因推断: Day1 19:25 前后 ncu profiling 重置了 -lgc 锁频, GPU 回到 boost (~2583MHz),
+导致 19:25 后测量的 r84(93.32) / m系列 / v5(82.17) 全部偏快 ~2.5%。
+教训(写入报告): 每次测量前后必须读取 clocks.gr 并记录, ncu 运行后必须重新锁频。
+
+[2] 锁频复核 Day1 数据 (漂移校正后的真实值)
+  V5  (cuBLAS TF32):      85.21 ms  (-10.9%)   Day1 记录 82.17 偏快
+  V5+r84:                 85.16 ms  (= V5, r84 再次证明无效)
+  V6  (cuBLAS FP32):     108.37 ms  (+13.3%)   与 Day1 一致(测得早, 漂移前)
+  V1  (4x4 tile):        107.96 ms  (+12.9%)   一致
+  K2  (two-pass 4x8):    101.53 ms  (+6.1%)    一致
+
+[3] 发散尝试 D1: GELU 融合进 matmul epilogue —— 无效(零净收益)
+matmul_forward_kernel4_gelu: 尾部同时写 fch + gelu(fch), 省独立 gelu kernel 对
+B*T*4C (50MB/层) 的一次读。正确性 OK。
+结果: 95.83ms = 基线。省掉的 600MB 读被新增 600MB gelu 写完全抵消 (写带宽同样饱和)。
+
+[4] 发散尝试 D2: residual+layernorm 融合(单点) —— 小幅有效
+fused_residual_ln_kernel<768>: 每 warp 一行, residual 行驻留寄存器(24 float/thread),
+inp1/inp2 只读一次, 写 residual 一次, LN 三遍全部读寄存器 (原版 LN 读 x 三遍)。
+替换 residual2+ln2 融合点 (12 层)。正确性 OK。
+结果: 95.47ms (-0.4%)
+
+[5] 发散成果 D3 = D2 + 第二融合点 —— 当前同精度最优 ✅
+把 residual3 与消费它的 LN 融合: l<L-1 时融合下一层 ln1, l=L-1 时融合最终 lnf;
+ln1 仅在 l==0 单独计算。每步共 24 个融合点, 消除 23 次 residual 张量的重读+kernel启动。
+正确性: test_gpt2fp32cu overall okay: 1
+交错 A/B x3 (前后 2520MHz):
+  V0: 95.637 / 95.652 / 95.668  -> 95.65 ms
+  D3: 95.287 / 95.271 / 95.292  -> 95.28 ms   (-0.39%, 稳定可复现)
+
+[6] 基线精度构成的重要事实 (旧报告未提及)
+train_gpt2_fp32.cu "基线"并非纯 FP32:
+  - forward matmul: 手写 kernel4, FP32 FMA
+  - backward matmul (全部): cuBLAS, TF32 已开启 (enable_tf32=1, sm>=8)
+  - attention fwd+bwd: cublasSgemmStridedBatched, TF32
+即基线已是混合精度。V5 只是把 forward matmul 也换成 TF32 (-10.9%);
+V6 把全程强制 FP32 (+13.3%)。同精度对比时必须写清此边界。
+
+=== 修正后的排行榜 (2520MHz 锁频, 可复现) ===
+| 版本 | 精度 | ms/iter | vs V0 | 正确性 |
+|------|------|---------|-------|--------|
+| V5 (cuBLAS TF32 fwd matmul) | TF32↓ | 85.21 | -10.9% | OK |
+| D3 (residual+LN 双点融合)   | 同精度 | 95.28 | -0.39% | OK |
+| V0 baseline                 | 混合   | 95.65 | -      | OK |
+| r84 / M系列                 | 同精度 | 95.65 | 0 (勘误) | OK |
+| K2/K6, V1-V4, V6            | -      | 更慢   | -      | - |
+
+下一步候选: D3+V5 组合; softmax(5.3% GPU时间) online-softmax 优化; 
+attention permute/unpermute 融合; backward 侧 residual/LN 融合。
