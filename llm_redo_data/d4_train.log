@@ -1,0 +1,154 @@
++-----------------------+----------------------------------------------------+
+| Parameter             | Value                                              |
++-----------------------+----------------------------------------------------+
+| train data pattern    | dev/data/tinyshakespeare/tiny_shakespeare_train.bin |
+| val data pattern      | dev/data/tinyshakespeare/tiny_shakespeare_val.bin  |
+| output log file       | NULL                                               |
+| batch size B          | 4                                                  |
+| sequence length T     | 1024                                               |
+| learning rate         | 0.000300                                           |
+| val_loss_every        | 20                                                 |
+| val_max_steps         | 20                                                 |
+| sample_every          | 20                                                 |
+| genT                  | 64                                                 |
++-----------------------+----------------------------------------------------+
+| device                | NVIDIA GeForce RTX 4090                            |
+| TF32                  | enabled                                            |
++-----------------------+----------------------------------------------------+
+| max_sequence_length T | 1024                                               |
+| vocab_size V          | 50257                                              |
+| padded_vocab_size Vp  | 50304                                              |
+| num_layers L          | 12                                                 |
+| num_heads NH          | 12                                                 |
+| channels C            | 768                                                |
+| num_parameters        | 124475904                                          |
++-----------------------+----------------------------------------------------+
+| train_num_batches     | 74                                                 |
+| val_num_batches       | 8                                                  |
++-----------------------+----------------------------------------------------+
+allocated 474 MiB for model parameters
+allocated 5706 MiB for activations
+val loss 4.513806
+allocated 474 MiB for parameter gradients
+allocated 252 MiB for activation gradients
+allocated 474 MiB for AdamW optimizer state m
+allocated 474 MiB for AdamW optimizer state v
+step    1/74: train loss 4.287300 (86.592163 ms, 47302 tok/s)
+step    2/74: train loss 4.721543 (84.940796 ms, 48221 tok/s)
+step    3/74: train loss 4.390316 (84.922394 ms, 48232 tok/s)
+step    4/74: train loss 3.627860 (84.940266 ms, 48222 tok/s)
+step    5/74: train loss 3.717263 (85.009558 ms, 48182 tok/s)
+step    6/74: train loss 4.013747 (85.007148 ms, 48184 tok/s)
+step    7/74: train loss 4.110818 (84.931154 ms, 48227 tok/s)
+step    8/74: train loss 3.623431 (84.946135 ms, 48218 tok/s)
+step    9/74: train loss 3.965434 (84.986918 ms, 48195 tok/s)
+step   10/74: train loss 3.581451 (84.960756 ms, 48210 tok/s)
+step   11/74: train loss 4.028772 (84.946746 ms, 48218 tok/s)
+step   12/74: train loss 3.813154 (84.953905 ms, 48214 tok/s)
+step   13/74: train loss 4.029239 (84.962997 ms, 48209 tok/s)
+step   14/74: train loss 3.884992 (84.936103 ms, 48224 tok/s)
+step   15/74: train loss 3.711790 (84.951995 ms, 48215 tok/s)
+step   16/74: train loss 3.552968 (84.938003 ms, 48223 tok/s)
+step   17/74: train loss 3.987641 (85.043428 ms, 48163 tok/s)
+step   18/74: train loss 3.808937 (84.960235 ms, 48210 tok/s)
+step   19/74: train loss 3.534445 (84.920233 ms, 48233 tok/s)
+step   20/74: train loss 3.677762 (84.937425 ms, 48223 tok/s)
+val loss 3.725889
+generating:
+---
+O, but rub some into his hands, O, you shall see.
+O<|endoftext|>O<|endoftext|>O<|endoftext|>Scissor: Oman, how is noble-man these two!
+What man shall bring them together: let them reach
+
+<|endoftext|>O<|endoftext|>O<|endoftext|>Sc<|endoftext|>Withwail him who knocks his
+---
+step   21/74: train loss 3.609002 (84.863079 ms, 48265 tok/s)
+step   22/74: train loss 3.611747 (84.884750 ms, 48253 tok/s)
+step   23/74: train loss 3.147173 (84.882189 ms, 48255 tok/s)
+step   24/74: train loss 3.344236 (84.929192 ms, 48228 tok/s)
+step   25/74: train loss 3.707042 (84.864638 ms, 48265 tok/s)
+step   26/74: train loss 3.539905 (84.859198 ms, 48268 tok/s)
+step   27/74: train loss 3.843685 (84.881249 ms, 48255 tok/s)
+step   28/74: train loss 3.445628 (84.865337 ms, 48264 tok/s)
+step   29/74: train loss 3.317893 (84.879540 ms, 48256 tok/s)
+step   30/74: train loss 3.279898 (84.870087 ms, 48261 tok/s)
+step   31/74: train loss 3.154592 (84.870338 ms, 48261 tok/s)
+step   32/74: train loss 3.445039 (84.910320 ms, 48239 tok/s)
+step   33/74: train loss 3.566419 (84.886329 ms, 48252 tok/s)
+step   34/74: train loss 3.486334 (84.852408 ms, 48272 tok/s)
+step   35/74: train loss 3.721952 (84.982973 ms, 48197 tok/s)
+step   36/74: train loss 3.380213 (84.851417 ms, 48272 tok/s)
+step   37/74: train loss 3.199861 (84.865878 ms, 48264 tok/s)
+step   38/74: train loss 3.179981 (84.910128 ms, 48239 tok/s)
+step   39/74: train loss 3.601372 (84.887339 ms, 48252 tok/s)
+step   40/74: train loss 3.083006 (84.893728 ms, 48248 tok/s)
+val loss 3.595244
+generating:
+---
+Through swell beds,
+such cinquinled lads as they are;
+
+<|endoftext|>Quanox nâveu
+watered to the thinkt doth charms?
+
+<|endoftext|>OPERATOR:
+Austin: for to his chaw which was the true dignity,
+rounded by a tall head
+---
+step   41/74: train loss 3.829654 (84.903447 ms, 48243 tok/s)
+step   42/74: train loss 3.363087 (84.945119 ms, 48219 tok/s)
+step   43/74: train loss 3.355447 (84.874195 ms, 48259 tok/s)
+step   44/74: train loss 3.419183 (84.871055 ms, 48261 tok/s)
+step   45/74: train loss 3.609250 (84.890287 ms, 48250 tok/s)
+step   46/74: train loss 3.129684 (84.868034 ms, 48263 tok/s)
+step   47/74: train loss 3.464952 (84.847785 ms, 48274 tok/s)
+step   48/74: train loss 3.974990 (84.852245 ms, 48272 tok/s)
+step   49/74: train loss 3.225048 (84.852294 ms, 48272 tok/s)
+step   50/74: train loss 3.417923 (84.891286 ms, 48249 tok/s)
+step   51/74: train loss 3.761637 (84.923716 ms, 48231 tok/s)
+step   52/74: train loss 3.768916 (84.865245 ms, 48264 tok/s)
+step   53/74: train loss 3.411796 (84.857493 ms, 48269 tok/s)
+step   54/74: train loss 3.388662 (84.867333 ms, 48263 tok/s)
+step   55/74: train loss 3.275016 (84.836044 ms, 48281 tok/s)
+step   56/74: train loss 3.261146 (84.848453 ms, 48274 tok/s)
+step   57/74: train loss 3.028386 (84.870955 ms, 48261 tok/s)
+step   58/74: train loss 3.478977 (84.869764 ms, 48262 tok/s)
+step   59/74: train loss 3.271576 (84.942657 ms, 48220 tok/s)
+step   60/74: train loss 3.496388 (84.861154 ms, 48267 tok/s)
+val loss 3.506874
+generating:
+---
+
+Ladies and gentlemen,
+I with these plants that I plant shall keep
+like a leaf in your cup, toward threescore. Why, by
+plant I sometimes leave a man grievous dead;
+that which he be's sure of, having indeed died;
+that instance thou hast had
+---
+step   61/74: train loss 3.211863 (84.922544 ms, 48232 tok/s)
+step   62/74: train loss 3.451617 (84.881734 ms, 48255 tok/s)
+step   63/74: train loss 3.372028 (84.946814 ms, 48218 tok/s)
+step   64/74: train loss 3.409358 (84.859511 ms, 48268 tok/s)
+step   65/74: train loss 3.578868 (85.015036 ms, 48179 tok/s)
+step   66/74: train loss 3.030112 (84.872842 ms, 48260 tok/s)
+step   67/74: train loss 3.296302 (84.863620 ms, 48265 tok/s)
+step   68/74: train loss 3.676635 (84.928424 ms, 48228 tok/s)
+step   69/74: train loss 3.297732 (84.847841 ms, 48274 tok/s)
+step   70/74: train loss 3.647845 (84.927803 ms, 48229 tok/s)
+step   71/74: train loss 3.567298 (84.849221 ms, 48273 tok/s)
+step   72/74: train loss 3.731975 (84.869420 ms, 48262 tok/s)
+step   73/74: train loss 3.824820 (84.875311 ms, 48259 tok/s)
+step   74/74: train loss 3.380651 (84.849311 ms, 48273 tok/s)
+val loss 3.491314
+generating:
+---
+BUCKINGHAM:
+He is betwixt thy vessel and the seas,
+That always I have beheld him scotchas
+In them with years of wicked clothes,
+His sheep and his ratsbaits, his Rahmanes
+With none of whom he's shadows, his fake,
+
+---
+total average iteration time: 84.926033 ms

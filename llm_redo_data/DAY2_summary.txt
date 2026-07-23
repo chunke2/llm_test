@@ -46,14 +46,29 @@ train_gpt2_fp32.cu "基线"并非纯 FP32:
 即基线已是混合精度。V5 只是把 forward matmul 也换成 TF32 (-10.9%);
 V6 把全程强制 FP32 (+13.3%)。同精度对比时必须写清此边界。
 
+[7] 发散成果 D4 = D3 + V5 (cuBLAS Sgemm TF32 + 独立bias kernel)
+正确性 OK。交错 A/B x3: D4 = 84.92 / V5 = 85.21  -> D3 融合在 TF32 赛道同样有效
+
+[8] 发散成果 D5 = D3 + cublasLt TF32 + BIAS epilogue —— TF32 赛道新最优 ✅
+用 cublasLtMatmul 的 CUBLASLT_EPILOGUE_BIAS 替换 "Sgemm+独立bias kernel",
+消除 bias kernel 对输出张量的整读整写。
+踩坑与修复(写入报告):
+  a) Lt 启发式可能选 split-K 算法改变累加顺序 -> REDUCTION_SCHEME_NONE 约束
+  b) 硬编码 COMPUTE_32F_FAST_TF32 导致 test 失败: test_gpt2fp32cu 里 enable_tf32=0,
+     必须 cublasGetMathMode 动态跟随 handle, 否则精度门禁必挂
+正确性: overall okay: 1
+交错 A/B x3: D4 = 84.92/84.93/84.93, D5 = 84.21/84.19/84.20
+
 === 修正后的排行榜 (2520MHz 锁频, 可复现) ===
 | 版本 | 精度 | ms/iter | vs V0 | 正确性 |
 |------|------|---------|-------|--------|
-| V5 (cuBLAS TF32 fwd matmul) | TF32↓ | 85.21 | -10.9% | OK |
-| D3 (residual+LN 双点融合)   | 同精度 | 95.28 | -0.39% | OK |
-| V0 baseline                 | 混合   | 95.65 | -      | OK |
-| r84 / M系列                 | 同精度 | 95.65 | 0 (勘误) | OK |
-| K2/K6, V1-V4, V6            | -      | 更慢   | -      | - |
+| D5 (D3融合 + cublasLt TF32 bias epilogue) | TF32↓ | 84.20 | -12.0% | OK |
+| D4 (D3融合 + cuBLAS Sgemm TF32)           | TF32↓ | 84.92 | -11.2% | OK |
+| V5 (cuBLAS TF32 fwd matmul)               | TF32↓ | 85.21 | -10.9% | OK |
+| D3 (residual+LN 双点融合)                 | 同精度 | 95.28 | -0.39% | OK |
+| V0 baseline                               | 混合   | 95.65 | -      | OK |
+| r84 / M系列                               | 同精度 | 95.65 | 0 (勘误) | OK |
+| K2/K6, V1-V4, V6                          | -      | 更慢   | -      | - |
 
-下一步候选: D3+V5 组合; softmax(5.3% GPU时间) online-softmax 优化; 
-attention permute/unpermute 融合; backward 侧 residual/LN 融合。
+下一步候选: softmax(5.3% GPU时间) online-softmax 优化; attention permute/unpermute
+融合; backward 侧 residual/LN 融合; D5 的 GELU epilogue (CUBLASLT_EPILOGUE_GELU_AUX)。
