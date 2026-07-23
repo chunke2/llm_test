@@ -1,0 +1,87 @@
+================================================================
+llm.c GPT-2 重跑优化实验 — DAY 3 总结 (2026-07-23)
+主题：环境修复 (NVML 错位) + 继续发散 (D6 / D7 均为负结果)
+================================================================
+
+一、环境危机与修复（最关键的当日事件）
+------------------------------------------------
+VM 重启后 nvidia-smi 报 "Failed to initialize NVML: Driver/library version mismatch"，
+CUDA 程序直接 [CUDA ERROR] unknown error（D5 都跑不起来）。
+
+根因：
+- 内核模块 NVRM = 580.95.05（VM 启动时加载的旧模块）
+- 用户态库 libnvidia-ml.so = 580.159.03（昨晚 apt 自动升级 nvidia userspace 所致）
+- 两者主版本同(580)但次版本错配，NVML 拒绝初始化 → 锁频失效 + CUDA 计算挂掉
+
+修复（无需重租/重启 VM，就地解决）：
+  1. pkill -9 nvidia-persistenced            # 释放 /dev/nvidia* 占用
+  2. modprobe -r nvidia_drm nvidia_modeset nvidia_uvm nvidia ecc   # 卸载旧模块
+  3. modprobe nvidia                          # 加载 DKMS 已注册的 580.159.03 模块
+     （/var/lib/dkms/nvidia/580.159.03 对当前内核 6.8.0-59-generic 已 installed，
+      磁盘 /lib/modules/.../nvidia.ko 时间戳今早 06:42）
+  4. nvidia-smi -pm 1 ; nvidia-smi -lgc 2520  # 修复后必须重设锁频！
+
+验证：修复后 nvidia-smi 恢复，D5 复现 84.24ms（与 Day2 84.20ms 一致）→ 测量环境可信。
+
+教训：VM 每次重启/软件更新都可能重演此错位。修复脚本应固化，且每次测前必读 clocks.gr 确认 2520MHz。
+
+二、D6：cublasLt GELU_AUX epilogue 融合 — 失败（放弃）
+------------------------------------------------
+设计：在 D5 基础上，把 mlp 的 c_fwd 后独立 gelu_forward 融合进 cublasLt 的
+      GELU_AUX epilogue（主输出=gelu(c) 写 l_fch_gelu，aux=pre-gelu 写 l_fch）。
+      backward 的 gelu_backward 仍用 l_fch/l_fch_gelu，契约不变。
+
+结果：FP32 正确性门禁（enable_tf32=0）第一步 logits 即严重偏差
+      (-43.43 vs 参考 -10.72)，overall okay: 0。
+
+根因：cublasLt 的 GELU_AUX epilogue 主要在 TF32 tensor core 路径验证，
+      纯 FP32 compute 路径下 aux/gelu 数值不正确。
+
+处置：所有版本必须通过 FP32 门禁（D3/D5 均遵守），D6 做不到；
+      且 Day1 的 D1 已证明 gelu 融合本身零收益（省读=增写）。放弃，记为负结果。
+
+三、D7：CUDA Graph 重放整个训练 step — 失败（放弃）
+------------------------------------------------
+设计：把 forward+zero_grad+backward+update 捕获为 cudaGraph，每步 cudaGraphLaunch
+      重放，消除 ~30+ 次 kernel launch 的 host 开销；数据 staging 留在 graph 外。
+      纯重放不改数值 → FP32 门禁必然过。
+
+结果：运行即报 "operation not permitted when stream is capturing"。
+
+根因（两层）：
+  1. forward 内同步 cudaMemcpy(loss D2H) 在 capture 区不允许（需改 async）；
+  2. 【更致命】llm.c 在每个 kernel 后调用 cudaCheck(cudaGetLastError())，
+     而 capture 模式明确禁止该调用（753 行 encoder_forward 的 cudaGetLastError
+     直接报错）。集成需移除/条件化全文件成百处错误检查。
+
+处置：与代码风格根本不兼容；预期收益仅 ~30 launch × 数 µs ≈ 0.2%。放弃，记为负结果。
+      D7/D7b 失败源码已归档：train_gpt2_fp32_d7.cu / _d7b.cu。
+
+四、发散空间结论（重要）
+------------------------------------------------
+D1（GELU 融合进 matmul epilogue）：零收益
+D6（GELU_AUX epilogue）：FP32 门禁数值错误
+D7（CUDA Graph）：capture 不兼容（cudaGetLastError 无处不在）
+三者共同证明：在 RTX 4090 上，GPT-2 训练的边际优化空间
+  - 不在 kernel 融合（读写抵消）
+  - 不在 launch 开销（占比 <0.3%）
+  - 唯一真实的性能杠杆是 **matmul 的精度降级（FP32 → TF32 tensor core）**
+
+五、最终排行榜（锁频 2520MHz，可复现，交错 A/B×3）
+------------------------------------------------
+| 版本 | 做法 | 精度 | ms/iter | vs V0 | 门禁 |
+|------|------|------|---------|-------|------|
+| D5   | D3 融合 + cublasLt TF32 + BIAS epilogue | TF32↓ | 84.20 | -12.0% | OK |
+| D4   | D3 融合 + cuBLAS Sgemm TF32            | TF32↓ | 84.92 | -11.2% | OK |
+| V5   | cuBLAS TF32 fwd matmul                | TF32↓ | 85.21 | -10.9% | OK |
+| D3   | residual+LN 双点融合（寄存器驻留行）   | 同精度 | 95.28 | -0.39% | OK |
+| V0   | 原版 8×8 tile                          | 混合   | 95.65 | 基准   | OK |
+| r84/M | 旧报告宣称 "-2.4%"                     | —     | 95.65 | 0(勘误) | OK |
+
+六、下一步建议
+------------------------------------------------
+发散已到硬墙（D1/D6/D7 三方向均失败/无收益），核心结论稳固。
+建议收尾：撰写完整实验报告（摘要、环境与方法含测量纪律、旧报告反驳、
+各版本 ncu 根因、排行榜、结论与局限、复现步骤），作为项目最终交付。
+如需进一步探索，仅剩的高杠杆候选是 BF16 精度路径（偏离原 FP32 训练语义，
+可作附录而非主结论）。
