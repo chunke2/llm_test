@@ -1,0 +1,153 @@
++-----------------------+----------------------------------------------------+
+| Parameter             | Value                                              |
++-----------------------+----------------------------------------------------+
+| train data pattern    | dev/data/tinyshakespeare/tiny_shakespeare_train.bin |
+| val data pattern      | dev/data/tinyshakespeare/tiny_shakespeare_val.bin  |
+| output log file       | NULL                                               |
+| batch size B          | 4                                                  |
+| sequence length T     | 1024                                               |
+| learning rate         | 0.000300                                           |
+| val_loss_every        | 20                                                 |
+| val_max_steps         | 20                                                 |
+| sample_every          | 20                                                 |
+| genT                  | 64                                                 |
++-----------------------+----------------------------------------------------+
+| device                | NVIDIA GeForce RTX 4090                            |
+| TF32                  | enabled                                            |
++-----------------------+----------------------------------------------------+
+| max_sequence_length T | 1024                                               |
+| vocab_size V          | 50257                                              |
+| padded_vocab_size Vp  | 50304                                              |
+| num_layers L          | 12                                                 |
+| num_heads NH          | 12                                                 |
+| channels C            | 768                                                |
+| num_parameters        | 124475904                                          |
++-----------------------+----------------------------------------------------+
+| train_num_batches     | 74                                                 |
+| val_num_batches       | 8                                                  |
++-----------------------+----------------------------------------------------+
+allocated 474 MiB for model parameters
+allocated 5706 MiB for activations
+val loss 4.503176
+allocated 474 MiB for parameter gradients
+allocated 252 MiB for activation gradients
+allocated 474 MiB for AdamW optimizer state m
+allocated 474 MiB for AdamW optimizer state v
+step    1/74: train loss 4.275633 (73.810717 ms, 55493 tok/s)
+step    2/74: train loss 4.860685 (70.899763 ms, 57771 tok/s)
+step    3/74: train loss 4.385062 (70.794747 ms, 57857 tok/s)
+step    4/74: train loss 3.647417 (70.790078 ms, 57861 tok/s)
+step    5/74: train loss 3.737011 (70.809898 ms, 57845 tok/s)
+step    6/74: train loss 4.020682 (70.848560 ms, 57813 tok/s)
+step    7/74: train loss 4.118618 (70.818619 ms, 57837 tok/s)
+step    8/74: train loss 3.631409 (70.903222 ms, 57768 tok/s)
+step    9/74: train loss 3.971896 (70.884691 ms, 57783 tok/s)
+step   10/74: train loss 3.597000 (70.780217 ms, 57869 tok/s)
+step   11/74: train loss 4.027976 (70.908772 ms, 57764 tok/s)
+step   12/74: train loss 3.814205 (70.820649 ms, 57836 tok/s)
+step   13/74: train loss 4.030396 (71.010816 ms, 57681 tok/s)
+step   14/74: train loss 3.892613 (70.817899 ms, 57838 tok/s)
+step   15/74: train loss 3.719187 (70.837429 ms, 57822 tok/s)
+step   16/74: train loss 3.559141 (70.794928 ms, 57857 tok/s)
+step   17/74: train loss 3.994530 (70.818339 ms, 57838 tok/s)
+step   18/74: train loss 3.815585 (70.928223 ms, 57748 tok/s)
+step   19/74: train loss 3.536363 (70.784427 ms, 57865 tok/s)
+step   20/74: train loss 3.683192 (70.835469 ms, 57824 tok/s)
+val loss 3.729883
+generating:
+---
+Nurse: Come to me, my stick is too strong
+He's had the virtue to marry a whoremonger; he shall not cool a brawl,
+but you, and your trickery and muscling, shall make him happy.
+High
+Terminates again:
+But try your shrewd
+---
+step   21/74: train loss 3.612184 (70.785417 ms, 57865 tok/s)
+step   22/74: train loss 3.614954 (70.858601 ms, 57805 tok/s)
+step   23/74: train loss 3.152145 (70.821019 ms, 57835 tok/s)
+step   24/74: train loss 3.348650 (70.875651 ms, 57791 tok/s)
+step   25/74: train loss 3.708572 (70.798498 ms, 57854 tok/s)
+step   26/74: train loss 3.545345 (70.795187 ms, 57857 tok/s)
+step   27/74: train loss 3.843812 (70.811749 ms, 57843 tok/s)
+step   28/74: train loss 3.445588 (70.797777 ms, 57854 tok/s)
+step   29/74: train loss 3.321558 (70.939984 ms, 57738 tok/s)
+step   30/74: train loss 3.276779 (70.832639 ms, 57826 tok/s)
+step   31/74: train loss 3.155960 (70.796408 ms, 57856 tok/s)
+step   32/74: train loss 3.457256 (70.798138 ms, 57854 tok/s)
+step   33/74: train loss 3.569983 (70.802858 ms, 57850 tok/s)
+step   34/74: train loss 3.490957 (70.800827 ms, 57852 tok/s)
+step   35/74: train loss 3.726720 (70.814429 ms, 57841 tok/s)
+step   36/74: train loss 3.378500 (70.772807 ms, 57875 tok/s)
+step   37/74: train loss 3.204566 (70.759137 ms, 57886 tok/s)
+step   38/74: train loss 3.174103 (70.771806 ms, 57876 tok/s)
+step   39/74: train loss 3.610537 (70.847640 ms, 57814 tok/s)
+step   40/74: train loss 3.086092 (70.780877 ms, 57868 tok/s)
+val loss 3.596924
+generating:
+---
+NEWMITLAND:
+Men, thou wilt be troubl'd.
+
+<|endoftext|>SEAN:
+Before thou didst leave the racks, the most bad act of murdering the weariest bastards of his degraded booty, in a case so heavy, that the person could not have uttered it, was that
+---
+step   41/74: train loss 3.853405 (70.730176 ms, 57910 tok/s)
+step   42/74: train loss 3.366699 (70.795057 ms, 57857 tok/s)
+step   43/74: train loss 3.359363 (70.734755 ms, 57906 tok/s)
+step   44/74: train loss 3.427651 (70.830060 ms, 57828 tok/s)
+step   45/74: train loss 3.615833 (70.751575 ms, 57892 tok/s)
+step   46/74: train loss 3.127018 (70.763267 ms, 57883 tok/s)
+step   47/74: train loss 3.467572 (70.890842 ms, 57778 tok/s)
+step   48/74: train loss 3.976398 (70.756665 ms, 57888 tok/s)
+step   49/74: train loss 3.233049 (70.879431 ms, 57788 tok/s)
+step   50/74: train loss 3.420322 (70.773217 ms, 57875 tok/s)
+step   51/74: train loss 3.759633 (70.780306 ms, 57869 tok/s)
+step   52/74: train loss 3.772512 (70.760277 ms, 57885 tok/s)
+step   53/74: train loss 3.412874 (70.762986 ms, 57883 tok/s)
+step   54/74: train loss 3.390435 (70.780247 ms, 57869 tok/s)
+step   55/74: train loss 3.275525 (70.759127 ms, 57886 tok/s)
+step   56/74: train loss 3.259273 (70.759486 ms, 57886 tok/s)
+step   57/74: train loss 3.026668 (70.858550 ms, 57805 tok/s)
+step   58/74: train loss 3.479606 (70.868761 ms, 57796 tok/s)
+step   59/74: train loss 3.275253 (70.872340 ms, 57794 tok/s)
+step   60/74: train loss 3.495813 (70.864390 ms, 57800 tok/s)
+val loss 3.508734
+generating:
+---
+
+Madiq:
+I am to-morrow to-day in honour
+As his free born brother in my owncountry.
+I have but restrained to my abbot the faithful trial,
+Knows 'tis a rack of hate,
+That strew'd them like his own shame on floor
+And
+---
+step   61/74: train loss 3.212769 (70.817139 ms, 57839 tok/s)
+step   62/74: train loss 3.457736 (70.850550 ms, 57811 tok/s)
+step   63/74: train loss 3.372419 (70.858341 ms, 57805 tok/s)
+step   64/74: train loss 3.408625 (70.843469 ms, 57817 tok/s)
+step   65/74: train loss 3.584064 (70.846349 ms, 57815 tok/s)
+step   66/74: train loss 3.028317 (70.862081 ms, 57802 tok/s)
+step   67/74: train loss 3.295569 (70.849810 ms, 57812 tok/s)
+step   68/74: train loss 3.682547 (70.927333 ms, 57749 tok/s)
+step   69/74: train loss 3.301664 (70.963154 ms, 57720 tok/s)
+step   70/74: train loss 3.654561 (70.855020 ms, 57808 tok/s)
+step   71/74: train loss 3.568942 (70.874141 ms, 57792 tok/s)
+step   72/74: train loss 3.741250 (70.846759 ms, 57814 tok/s)
+step   73/74: train loss 3.828674 (70.844700 ms, 57816 tok/s)
+step   74/74: train loss 3.379141 (70.853919 ms, 57809 tok/s)
+val loss 3.497118
+generating:
+---
+BUCKINGHAM:
+But in my heart said Christ said
+'Too can be death we are not; either 'tis
+yond when the sun sets and endeth the day; not when
+the moon hath light: this hath been our request; and loss to
+death.
+
+<|endoftext|>LUC
+---
+total average iteration time: 70.867881 ms

@@ -1,0 +1,46 @@
+=== DAY4: BF16 精度路径（最大单点加速，precision lever 完整验证）===
+
+背景：同精度手写 kernel 路径已到硬墙（D3 -0.39%，D1/D6/D7 净零/失败）。唯一真实杠杆是
+matmul 精度。TF32 已拿到 -12%（D5）。本日探索更低的 BF16，把 tensor core 吞吐推到 2× TF32。
+
+环境：VM 在线，锁频 2520MHz 稳定（D5 仍 84.20ms，可复现）。测量纪律同前。
+
+--- D8：前向 matmul 改 BF16（cublasLt）---
+做法：FP32 激活/权重经 cast kernel(__float2bfloat16) 转 __nv_bfloat16，cublasLt 做
+  BF16×BF16→FP32（compute=CUBLAS_COMPUTE_32F，保留 BIAS epilogue）。缓存 BF16 scratch 缓冲。
+  反向 matmul 仍 TF32（同 D5）。
+结果：80.16ms（-16.2% vs V0，-4.8% vs D5）。交错 A/B×3 @2520MHz 确认（80.13~80.19）。
+  数值：step1 loss 4.2756（vs D5 4.2873，差0.011），val loss 3.7325（vs 3.7258）。健康跟随。
+
+--- D8b：前向+反向 matmul 全改 BF16 ---
+做法：在 D8 基础上，matmul_backward 的两个 cublasSgemm 改 cublasGemmEx
+  （CUDA_R_16BF 输入 + CUBLAS_COMPUTE_32F + FP32 输出），沿用原 sgemm 的 m/n/k/ld 约定
+  （布局风险最低）。dbias 仍 FP32 kernel 不变。
+结果：稳态（后50步均值）70.93ms。
+  交错 A/B×3 @2520MHz：D5=84.195/84.198/84.200；D8b=70.938/70.924/70.929。极稳。
+  vs D5 -15.8%，vs V0 -25.8%。单步首步因 cublasLt heuristic 预热约 73.8ms。
+  数值：val loss 4.5032→3.7299→3.5969→3.5087→3.4971；D5 参考 3.4921。差<0.005。健康。
+
+--- 关键认知 ---
+BF16 是"标准混合精度训练"做法（与 PyTorch AMP / HF 默认一致），但偏离原 llm.c 的 FP32 语义。
+故在报告中与 TF32、D3 分列，明确标注精度档位，绝不混入"同精度手写优化"结论。
+BF16 不通过严格 FP32 正确性门禁（精度低于参考），但以 loss 轨迹跟随作为健康判据（标准做法）。
+
+--- 修正后最终排行榜（2520MHz，可复现）---
+| 版本 | 精度 | ms/iter | vs V0 | 门禁 |
+| D8b (fwd+bwd BF16) | BF16↓ | 70.93 | -25.8% | 数值跟随 |
+| D8  (fwd BF16)     | BF16↓ | 80.16 | -16.2% | 数值跟随 |
+| D5  (cublasLt TF32)| TF32↓ | 84.20 | -12.0% | OK |
+| D3  (residual+LN)  | 同精度 | 95.28 | -0.39% | OK |
+| V0  基线           | 混合  | 95.65 | 基准   | OK |
+
+--- 结论（与旧报告对照）---
+原报告把"小 tile 快 21%""cuBLASLt 换 MMA 是加速来源"当成架构优化 —— 实测均为假象/反向。
+真实加速 100% 来自 matmul 精度降级：TF32 -12%，BF16 -25.8%。手写 kernel 同精度仅 D3 -0.39%。
+至此"精度是唯一真实杠杆"在 FP32→TF32→BF16 三档上被完整验证。
+
+--- 提交 ---
+- 源码 train_gpt2_fp32_d8.cu / d8b.cu
+- 日志 d8_train.log / d8b_train.log
+- 主报告 llm_redo_实验报告.md 排行榜/结论/局限已更新
+- (commit 见 git log)

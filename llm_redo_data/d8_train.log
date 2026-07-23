@@ -1,0 +1,156 @@
++-----------------------+----------------------------------------------------+
+| Parameter             | Value                                              |
++-----------------------+----------------------------------------------------+
+| train data pattern    | dev/data/tinyshakespeare/tiny_shakespeare_train.bin |
+| val data pattern      | dev/data/tinyshakespeare/tiny_shakespeare_val.bin  |
+| output log file       | NULL                                               |
+| batch size B          | 4                                                  |
+| sequence length T     | 1024                                               |
+| learning rate         | 0.000300                                           |
+| val_loss_every        | 20                                                 |
+| val_max_steps         | 20                                                 |
+| sample_every          | 20                                                 |
+| genT                  | 64                                                 |
++-----------------------+----------------------------------------------------+
+| device                | NVIDIA GeForce RTX 4090                            |
+| TF32                  | enabled                                            |
++-----------------------+----------------------------------------------------+
+| max_sequence_length T | 1024                                               |
+| vocab_size V          | 50257                                              |
+| padded_vocab_size Vp  | 50304                                              |
+| num_layers L          | 12                                                 |
+| num_heads NH          | 12                                                 |
+| channels C            | 768                                                |
+| num_parameters        | 124475904                                          |
++-----------------------+----------------------------------------------------+
+| train_num_batches     | 74                                                 |
+| val_num_batches       | 8                                                  |
++-----------------------+----------------------------------------------------+
+allocated 474 MiB for model parameters
+allocated 5706 MiB for activations
+val loss 4.503176
+allocated 474 MiB for parameter gradients
+allocated 252 MiB for activation gradients
+allocated 474 MiB for AdamW optimizer state m
+allocated 474 MiB for AdamW optimizer state v
+step    1/74: train loss 4.275633 (81.856036 ms, 50039 tok/s)
+step    2/74: train loss 4.836447 (80.165609 ms, 51094 tok/s)
+step    3/74: train loss 4.381226 (80.219061 ms, 51060 tok/s)
+step    4/74: train loss 3.646878 (80.164769 ms, 51094 tok/s)
+step    5/74: train loss 3.738555 (80.227392 ms, 51054 tok/s)
+step    6/74: train loss 4.018784 (80.154059 ms, 51101 tok/s)
+step    7/74: train loss 4.119822 (80.175549 ms, 51087 tok/s)
+step    8/74: train loss 3.632049 (80.229462 ms, 51053 tok/s)
+step    9/74: train loss 3.974646 (80.138078 ms, 51111 tok/s)
+step   10/74: train loss 3.595881 (80.126818 ms, 51118 tok/s)
+step   11/74: train loss 4.030450 (80.217961 ms, 51060 tok/s)
+step   12/74: train loss 3.816588 (80.198520 ms, 51073 tok/s)
+step   13/74: train loss 4.032020 (80.253372 ms, 51038 tok/s)
+step   14/74: train loss 3.894368 (80.161209 ms, 51097 tok/s)
+step   15/74: train loss 3.721079 (80.152470 ms, 51102 tok/s)
+step   16/74: train loss 3.557745 (80.153118 ms, 51102 tok/s)
+step   17/74: train loss 3.998652 (80.269954 ms, 51027 tok/s)
+step   18/74: train loss 3.816704 (80.255862 ms, 51036 tok/s)
+step   19/74: train loss 3.536990 (80.164329 ms, 51095 tok/s)
+step   20/74: train loss 3.680479 (80.257872 ms, 51035 tok/s)
+val loss 3.732545
+generating:
+---
+Nurse: Come to me, my daughter. I call upon you, that I shall have twenty two-four hours' morning.
+
+<|endoftext|>Albrien: I keep you, and make my prayers interminable.
+
+<|endoftext|>Alb<|endoftext|>Nurse<|endoftext|>Princess if you
+hold answerable unto me
+---
+step   21/74: train loss 3.614145 (80.182050 ms, 51083 tok/s)
+step   22/74: train loss 3.612797 (80.212242 ms, 51064 tok/s)
+step   23/74: train loss 3.150868 (80.189960 ms, 51078 tok/s)
+step   24/74: train loss 3.348624 (80.198801 ms, 51073 tok/s)
+step   25/74: train loss 3.711421 (80.200190 ms, 51072 tok/s)
+step   26/74: train loss 3.546523 (80.349746 ms, 50977 tok/s)
+step   27/74: train loss 3.844852 (80.186610 ms, 51080 tok/s)
+step   28/74: train loss 3.447721 (80.174979 ms, 51088 tok/s)
+step   29/74: train loss 3.322700 (80.187339 ms, 51080 tok/s)
+step   30/74: train loss 3.276860 (80.218861 ms, 51060 tok/s)
+step   31/74: train loss 3.157212 (80.252532 ms, 51038 tok/s)
+step   32/74: train loss 3.451951 (80.190910 ms, 51078 tok/s)
+step   33/74: train loss 3.569209 (80.190660 ms, 51078 tok/s)
+step   34/74: train loss 3.493455 (80.188060 ms, 51079 tok/s)
+step   35/74: train loss 3.723850 (80.210662 ms, 51065 tok/s)
+step   36/74: train loss 3.377749 (80.203070 ms, 51070 tok/s)
+step   37/74: train loss 3.202149 (80.214051 ms, 51063 tok/s)
+step   38/74: train loss 3.171901 (80.305104 ms, 51005 tok/s)
+step   39/74: train loss 3.605025 (80.201091 ms, 51071 tok/s)
+step   40/74: train loss 3.082002 (80.230362 ms, 51052 tok/s)
+val loss 3.596734
+generating:
+---
+Call thee heir,
+Take the sorrow: if I ever must say a word amiss:
+Here comes thy father: what geez, dost thou know of thee?
+Do thou hardly live to mournth'st?
+Wilt thou dost not be honest, doth thy very cry st
+---
+step   41/74: train loss 3.846359 (80.234741 ms, 51050 tok/s)
+step   42/74: train loss 3.365797 (80.215682 ms, 51062 tok/s)
+step   43/74: train loss 3.353158 (80.219371 ms, 51059 tok/s)
+step   44/74: train loss 3.428202 (80.190160 ms, 51078 tok/s)
+step   45/74: train loss 3.616052 (80.256192 ms, 51036 tok/s)
+step   46/74: train loss 3.129834 (80.210601 ms, 51065 tok/s)
+step   47/74: train loss 3.469124 (80.263213 ms, 51032 tok/s)
+step   48/74: train loss 3.981015 (80.187230 ms, 51080 tok/s)
+step   49/74: train loss 3.233135 (80.181860 ms, 51083 tok/s)
+step   50/74: train loss 3.422762 (80.193860 ms, 51076 tok/s)
+step   51/74: train loss 3.760942 (80.182339 ms, 51083 tok/s)
+step   52/74: train loss 3.773529 (80.260903 ms, 51033 tok/s)
+step   53/74: train loss 3.410135 (80.196650 ms, 51074 tok/s)
+step   54/74: train loss 3.391521 (80.198760 ms, 51073 tok/s)
+step   55/74: train loss 3.280941 (80.228843 ms, 51053 tok/s)
+step   56/74: train loss 3.263683 (80.169789 ms, 51091 tok/s)
+step   57/74: train loss 3.029156 (80.200740 ms, 51071 tok/s)
+step   58/74: train loss 3.478386 (80.178589 ms, 51085 tok/s)
+step   59/74: train loss 3.277265 (80.287704 ms, 51016 tok/s)
+step   60/74: train loss 3.495826 (80.169609 ms, 51091 tok/s)
+val loss 3.510379
+generating:
+---
+
+Ladies and gentlemen,
+I hearken you, sir?
+
+<|endoftext|>Ana Lloris:
+Upon your report,
+I swear, you and my king home to-day agree.
+
+<|endoftext|>BUCKINGHAM:<|endoftext|>Then, how shall we conduct this time?
+
+<|endoftext|>ASSOC
+---
+step   61/74: train loss 3.214971 (80.172239 ms, 51090 tok/s)
+step   62/74: train loss 3.457742 (80.176830 ms, 51087 tok/s)
+step   63/74: train loss 3.372937 (80.243642 ms, 51044 tok/s)
+step   64/74: train loss 3.411092 (80.173439 ms, 51089 tok/s)
+step   65/74: train loss 3.586460 (80.213532 ms, 51063 tok/s)
+step   66/74: train loss 3.026762 (80.258923 ms, 51034 tok/s)
+step   67/74: train loss 3.299170 (80.171479 ms, 51090 tok/s)
+step   68/74: train loss 3.682122 (80.163779 ms, 51095 tok/s)
+step   69/74: train loss 3.300720 (80.240672 ms, 51046 tok/s)
+step   70/74: train loss 3.655509 (80.262363 ms, 51032 tok/s)
+step   71/74: train loss 3.569715 (80.174969 ms, 51088 tok/s)
+step   72/74: train loss 3.737320 (80.189210 ms, 51079 tok/s)
+step   73/74: train loss 3.827353 (80.174200 ms, 51088 tok/s)
+step   74/74: train loss 3.383226 (80.264693 ms, 51031 tok/s)
+val loss 3.494708
+generating:
+---
+BUCKINGHAM:
+He is our Lord before thy worship,
+Though in the Virgin Mary
+be to thy worship our most excellent Pauline,
+Be well expressed by him, O Jason.
+
+<|endoftext|>GLOUCESTER:<|endoftext|>Your payment is our debts.
+Come, Pauline, put
+---
+total average iteration time: 80.228859 ms
