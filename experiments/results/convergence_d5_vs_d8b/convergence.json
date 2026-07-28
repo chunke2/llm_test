@@ -1,0 +1,67 @@
+{
+  "candidates": {
+    "d5": {
+      "tail_train_loss_mean": 0.10642932,
+      "validation_losses": [
+        4.513806,
+        3.506806,
+        3.495909,
+        3.608185,
+        3.96328,
+        4.377615,
+        5.125516,
+        5.650874,
+        6.039892,
+        6.296597,
+        6.535318,
+        6.564579
+      ]
+    },
+    "d8b": {
+      "tail_train_loss_mean": 0.10157094000000001,
+      "validation_losses": [
+        4.503176,
+        3.508897,
+        3.490577,
+        3.612881,
+        3.963531,
+        4.352416,
+        5.162241,
+        5.599468,
+        6.018898,
+        6.31937,
+        6.530212,
+        6.574111
+      ]
+    }
+  },
+  "comparison": "d5_vs_d8b",
+  "convergence_gate_passed": true,
+  "environment": {
+    "captured_at_utc": "2026-07-28T14:34:03.127436+00:00",
+    "git_commit": "bc079355a792f4544d22a3dea5da407300ce33aa",
+    "gpu": "NVIDIA GeForce RTX 4090, GPU-c852f7d9-80cf-18ad-8566-9d69d2613611, 575.51.03, 2520 MHz, Enabled, 450.00 W",
+    "nvcc": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2024 NVIDIA Corporation\nBuilt on Thu_Mar_28_02:18:24_PDT_2024\nCuda compilation tools, release 12.4, V12.4.131\nBuild cuda_12.4.r12.4/compiler.34097967_0",
+    "os": "Linux ubuntu 6.8.0-59-generic #61~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue Apr 15 17:03:15 UTC 2 x86_64 x86_64 x86_64 GNU/Linux"
+  },
+  "final_validation_loss_delta_b_minus_a": 0.009532000000000096,
+  "finite_losses": true,
+  "pointwise_train_loss_abs_difference": {
+    "count": 745,
+    "max_ms": 0.07601299999999966,
+    "mean_ms": 0.012259155704697988,
+    "median_ms": 0.008527000000000007,
+    "min_ms": 6.80000000000125e-05,
+    "p05_ms": 0.0007887999999999839,
+    "p95_ms": 0.03520859999999997,
+    "stddev_ms": 0.011955442054014831
+  },
+  "steps": 745,
+  "tail_steps": 100,
+  "tail_train_loss_delta_b_minus_a": -0.004858379999999982,
+  "thresholds": {
+    "absolute_final_validation_loss_delta": 0.02,
+    "absolute_tail_train_loss_mean_delta": 0.02
+  },
+  "train_data": "experiments/data/tinyshakespeare_10x/*.bin"
+}

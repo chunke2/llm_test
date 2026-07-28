@@ -1,0 +1,51 @@
+[System]
+Device 0: NVIDIA GeForce RTX 4090
+enable_tf32: 0
+[State]
+batch_size: 4
+seq_len: 64
+allocated 221 MiB for activations
+-43.431618, -43.431671
+-39.836346, -39.836388
+-43.065910, -43.065952
+-42.828045, -42.828087
+-43.529541, -43.529594
+-44.318398, -44.318443
+-41.227425, -41.227467
+-41.270760, -41.270817
+-42.541393, -42.541466
+-42.394997, -42.395054
+OK (LOGITS)
+allocated 474 MiB for parameter gradients
+allocated 4 MiB for activation gradients
+LOSS OK: 5.270010 5.270009
+grads
+OK -0.002320 -0.002320
+OK 0.002072 0.002072
+OK 0.003717 0.003717
+OK 0.001307 0.001307
+OK 0.000632 0.000632
+TENSOR OK
+allocated 474 MiB for AdamW optimizer state m
+allocated 474 MiB for AdamW optimizer state v
+step 0: loss 5.270010 (took 9.846739 ms)
+step 1: loss 4.059693 (took 11.990779 ms)
+step 2: loss 3.375090 (took 15.877449 ms)
+step 3: loss 2.800729 (took 15.921561 ms)
+step 4: loss 2.315350 (took 15.987062 ms)
+step 5: loss 1.848992 (took 15.877510 ms)
+step 6: loss 1.394610 (took 15.915631 ms)
+step 7: loss 0.999078 (took 15.922681 ms)
+step 8: loss 0.624074 (took 15.922821 ms)
+step 9: loss 0.376514 (took 15.919159 ms)
+loss ok at step 0: 5.270010 5.270007
+loss ok at step 1: 4.059693 4.059707
+loss ok at step 2: 3.375090 3.375123
+loss ok at step 3: 2.800729 2.800783
+loss ok at step 4: 2.315350 2.315382
+loss ok at step 5: 1.848992 1.849029
+loss ok at step 6: 1.394610 1.394656
+loss ok at step 7: 0.999078 0.999147
+loss ok at step 8: 0.624074 0.624080
+loss ok at step 9: 0.376514 0.376511
+overall okay: 1
