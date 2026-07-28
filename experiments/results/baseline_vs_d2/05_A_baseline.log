@@ -1,0 +1,115 @@
++-----------------------+----------------------------------------------------+
+| Parameter             | Value                                              |
++-----------------------+----------------------------------------------------+
+| train data pattern    | dev/data/tinyshakespeare/tiny_shakespeare_train.bin |
+| val data pattern      | dev/data/tinyshakespeare/tiny_shakespeare_val.bin  |
+| output log file       | NULL                                               |
+| batch size B          | 4                                                  |
+| sequence length T     | 1024                                               |
+| learning rate         | 0.000300                                           |
+| val_loss_every        | 1000                                               |
+| val_max_steps         | 20                                                 |
+| sample_every          | 1000                                               |
+| genT                  | 1                                                  |
++-----------------------+----------------------------------------------------+
+| device                | NVIDIA GeForce RTX 4090                            |
+| TF32                  | enabled                                            |
++-----------------------+----------------------------------------------------+
+| max_sequence_length T | 1024                                               |
+| vocab_size V          | 50257                                              |
+| padded_vocab_size Vp  | 50304                                              |
+| num_layers L          | 12                                                 |
+| num_heads NH          | 12                                                 |
+| channels C            | 768                                                |
+| num_parameters        | 124475904                                          |
++-----------------------+----------------------------------------------------+
+| train_num_batches     | 74                                                 |
+| val_num_batches       | 8                                                  |
++-----------------------+----------------------------------------------------+
+allocated 474 MiB for model parameters
+allocated 5706 MiB for activations
+val loss 4.513886
+allocated 474 MiB for parameter gradients
+allocated 252 MiB for activation gradients
+allocated 474 MiB for AdamW optimizer state m
+allocated 474 MiB for AdamW optimizer state v
+step    1/74: train loss 4.287312 (97.258697 ms, 42114 tok/s)
+step    2/74: train loss 4.727039 (95.595211 ms, 42847 tok/s)
+step    3/74: train loss 4.392490 (95.586772 ms, 42851 tok/s)
+step    4/74: train loss 3.628378 (95.597482 ms, 42846 tok/s)
+step    5/74: train loss 3.717014 (95.636704 ms, 42828 tok/s)
+step    6/74: train loss 4.013099 (95.597762 ms, 42846 tok/s)
+step    7/74: train loss 4.111174 (95.634173 ms, 42829 tok/s)
+step    8/74: train loss 3.623507 (95.588832 ms, 42850 tok/s)
+step    9/74: train loss 3.965234 (95.600762 ms, 42844 tok/s)
+step   10/74: train loss 3.581257 (95.618382 ms, 42836 tok/s)
+step   11/74: train loss 4.028406 (95.601092 ms, 42844 tok/s)
+step   12/74: train loss 3.813547 (95.596791 ms, 42846 tok/s)
+step   13/74: train loss 4.029142 (95.625634 ms, 42833 tok/s)
+step   14/74: train loss 3.885060 (95.602301 ms, 42844 tok/s)
+step   15/74: train loss 3.711794 (95.600363 ms, 42845 tok/s)
+step   16/74: train loss 3.553438 (95.600113 ms, 42845 tok/s)
+step   17/74: train loss 3.987518 (95.586971 ms, 42851 tok/s)
+step   18/74: train loss 3.808917 (95.587263 ms, 42850 tok/s)
+step   19/74: train loss 3.533844 (95.621362 ms, 42835 tok/s)
+step   20/74: train loss 3.678108 (95.585803 ms, 42851 tok/s)
+step   21/74: train loss 3.608683 (95.621383 ms, 42835 tok/s)
+step   22/74: train loss 3.612095 (95.605133 ms, 42842 tok/s)
+step   23/74: train loss 3.147004 (95.618022 ms, 42837 tok/s)
+step   24/74: train loss 3.344334 (95.608003 ms, 42841 tok/s)
+step   25/74: train loss 3.707099 (95.596742 ms, 42846 tok/s)
+step   26/74: train loss 3.539926 (95.614574 ms, 42838 tok/s)
+step   27/74: train loss 3.844136 (95.598882 ms, 42845 tok/s)
+step   28/74: train loss 3.445597 (95.624094 ms, 42834 tok/s)
+step   29/74: train loss 3.317957 (95.603744 ms, 42843 tok/s)
+step   30/74: train loss 3.279699 (95.614843 ms, 42838 tok/s)
+step   31/74: train loss 3.154676 (95.616873 ms, 42837 tok/s)
+step   32/74: train loss 3.444938 (95.620574 ms, 42835 tok/s)
+step   33/74: train loss 3.566408 (95.589073 ms, 42850 tok/s)
+step   34/74: train loss 3.487618 (95.594143 ms, 42847 tok/s)
+step   35/74: train loss 3.721956 (95.607494 ms, 42841 tok/s)
+step   36/74: train loss 3.380038 (95.603433 ms, 42843 tok/s)
+step   37/74: train loss 3.199989 (95.617783 ms, 42837 tok/s)
+step   38/74: train loss 3.179097 (95.615174 ms, 42838 tok/s)
+step   39/74: train loss 3.601360 (95.633844 ms, 42830 tok/s)
+step   40/74: train loss 3.083476 (95.602844 ms, 42843 tok/s)
+step   41/74: train loss 3.829587 (95.620603 ms, 42835 tok/s)
+step   42/74: train loss 3.363191 (95.609934 ms, 42840 tok/s)
+step   43/74: train loss 3.355774 (95.617963 ms, 42837 tok/s)
+step   44/74: train loss 3.419259 (95.603723 ms, 42843 tok/s)
+step   45/74: train loss 3.609208 (95.603123 ms, 42843 tok/s)
+step   46/74: train loss 3.129233 (95.601573 ms, 42844 tok/s)
+step   47/74: train loss 3.464327 (95.612513 ms, 42839 tok/s)
+step   48/74: train loss 3.975304 (95.606313 ms, 42842 tok/s)
+step   49/74: train loss 3.224811 (95.620495 ms, 42836 tok/s)
+step   50/74: train loss 3.417391 (95.599834 ms, 42845 tok/s)
+step   51/74: train loss 3.761473 (95.603114 ms, 42843 tok/s)
+step   52/74: train loss 3.768657 (95.606304 ms, 42842 tok/s)
+step   53/74: train loss 3.411454 (95.588562 ms, 42850 tok/s)
+step   54/74: train loss 3.388831 (95.604444 ms, 42843 tok/s)
+step   55/74: train loss 3.274669 (95.596392 ms, 42846 tok/s)
+step   56/74: train loss 3.261172 (95.588483 ms, 42850 tok/s)
+step   57/74: train loss 3.028711 (95.624084 ms, 42834 tok/s)
+step   58/74: train loss 3.479347 (95.621474 ms, 42835 tok/s)
+step   59/74: train loss 3.271410 (95.595553 ms, 42847 tok/s)
+step   60/74: train loss 3.496387 (95.603023 ms, 42843 tok/s)
+step   61/74: train loss 3.211524 (95.596744 ms, 42846 tok/s)
+step   62/74: train loss 3.451406 (95.606154 ms, 42842 tok/s)
+step   63/74: train loss 3.371999 (95.608754 ms, 42841 tok/s)
+step   64/74: train loss 3.408813 (95.587903 ms, 42850 tok/s)
+step   65/74: train loss 3.578896 (95.600524 ms, 42844 tok/s)
+step   66/74: train loss 3.029869 (95.600024 ms, 42845 tok/s)
+step   67/74: train loss 3.296286 (95.627105 ms, 42833 tok/s)
+step   68/74: train loss 3.676980 (95.625894 ms, 42833 tok/s)
+step   69/74: train loss 3.298109 (95.588254 ms, 42850 tok/s)
+step   70/74: train loss 3.647801 (95.600514 ms, 42844 tok/s)
+step   71/74: train loss 3.566941 (95.605534 ms, 42842 tok/s)
+step   72/74: train loss 3.731825 (95.588444 ms, 42850 tok/s)
+step   73/74: train loss 3.824940 (95.593854 ms, 42847 tok/s)
+step   74/74: train loss 3.381224 (95.583303 ms, 42852 tok/s)
+val loss 3.491887
+generating:
+---
+
+---
+total average iteration time: 95.627968 ms

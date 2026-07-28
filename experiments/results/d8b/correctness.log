@@ -1,0 +1,43 @@
+[System]
+Device 0: NVIDIA GeForce RTX 4090
+enable_tf32: 0
+[State]
+batch_size: 4
+seq_len: 64
+allocated 221 MiB for activations
+-43.431618, -43.870220
+MISMATCH AT INDEX 0,0: -43.431618 -43.870220
+NOT OK (LOGITS)
+allocated 474 MiB for parameter gradients
+allocated 4 MiB for activation gradients
+LOSS MISMATCH: 5.238554 5.270009
+grads
+OK -0.002426 -0.002320
+OK 0.002031 0.002072
+OK 0.003099 0.003717
+OK 0.001698 0.001307
+OK 0.001037 0.000632
+TENSOR NOT OK
+allocated 474 MiB for AdamW optimizer state m
+allocated 474 MiB for AdamW optimizer state v
+step 0: loss 5.238554 (took 10.977461 ms)
+step 1: loss 3.888095 (took 9.232200 ms)
+step 2: loss 3.236108 (took 10.876377 ms)
+step 3: loss 2.691958 (took 11.049503 ms)
+step 4: loss 2.239628 (took 10.907158 ms)
+step 5: loss 1.802086 (took 11.010791 ms)
+step 6: loss 1.369456 (took 10.977681 ms)
+step 7: loss 0.975967 (took 10.965041 ms)
+step 8: loss 0.619599 (took 10.995141 ms)
+step 9: loss 0.379176 (took 11.033933 ms)
+LOSS MISMATCH AT STEP 0: 5.238554 5.270007
+LOSS MISMATCH AT STEP 1: 3.888095 4.059707
+LOSS MISMATCH AT STEP 2: 3.236108 3.375123
+LOSS MISMATCH AT STEP 3: 2.691958 2.800783
+LOSS MISMATCH AT STEP 4: 2.239628 2.315382
+LOSS MISMATCH AT STEP 5: 1.802086 1.849029
+LOSS MISMATCH AT STEP 6: 1.369456 1.394656
+LOSS MISMATCH AT STEP 7: 0.975967 0.999147
+loss ok at step 8: 0.619599 0.624080
+loss ok at step 9: 0.379176 0.376511
+overall okay: 0

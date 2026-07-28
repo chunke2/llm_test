@@ -1,0 +1,94 @@
+{
+  "aggregate_steady_steps": {
+    "count": 192,
+    "max_ms": 34.46,
+    "mean_ms": 34.40484375,
+    "median_ms": 34.4,
+    "min_ms": 34.36,
+    "p05_ms": 34.38,
+    "p95_ms": 34.44,
+    "stddev_ms": 0.018390088455554714
+  },
+  "candidate": "mainline_bf16_cudnn_r0",
+  "environment": {
+    "captured_at_utc": "2026-07-28T15:07:08.244577+00:00",
+    "git_commit": "bc079355a792f4544d22a3dea5da407300ce33aa",
+    "gpu": "NVIDIA GeForce RTX 4090, GPU-c852f7d9-80cf-18ad-8566-9d69d2613611, 575.51.03, 2520 MHz, Enabled, 450.00 W",
+    "nvcc": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2024 NVIDIA Corporation\nBuilt on Thu_Mar_28_02:18:24_PDT_2024\nCuda compilation tools, release 12.4, V12.4.131\nBuild cuda_12.4.r12.4/compiler.34097967_0",
+    "os": "Linux ubuntu 6.8.0-59-generic #61~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue Apr 15 17:03:15 UTC 2 x86_64 x86_64 x86_64 GNU/Linux"
+  },
+  "executable": "train_gpt2cu",
+  "executable_sha256": "658e2df2c28367876dafd566c120bfec3c74b8e1031a5f267b5fdc0e33115813",
+  "runs": [
+    {
+      "all_steps": {
+        "count": 74,
+        "max_ms": 89.84,
+        "mean_ms": 35.14554054054054,
+        "median_ms": 34.39,
+        "min_ms": 34.36,
+        "p05_ms": 34.38,
+        "p95_ms": 34.43,
+        "stddev_ms": 6.445220410674065
+      },
+      "run": 1,
+      "steady_steps": {
+        "count": 64,
+        "max_ms": 34.44,
+        "mean_ms": 34.395625,
+        "median_ms": 34.39,
+        "min_ms": 34.36,
+        "p05_ms": 34.38,
+        "p95_ms": 34.43,
+        "stddev_ms": 0.016797108594720625
+      }
+    },
+    {
+      "all_steps": {
+        "count": 74,
+        "max_ms": 96.67,
+        "mean_ms": 35.24594594594594,
+        "median_ms": 34.4,
+        "min_ms": 34.38,
+        "p05_ms": 34.38,
+        "p95_ms": 34.433499999999995,
+        "stddev_ms": 7.238238436820868
+      },
+      "run": 2,
+      "steady_steps": {
+        "count": 64,
+        "max_ms": 34.44,
+        "mean_ms": 34.4034375,
+        "median_ms": 34.4,
+        "min_ms": 34.38,
+        "p05_ms": 34.38,
+        "p95_ms": 34.43,
+        "stddev_ms": 0.016639859393483433
+      }
+    },
+    {
+      "all_steps": {
+        "count": 74,
+        "max_ms": 90.31,
+        "mean_ms": 35.17162162162162,
+        "median_ms": 34.41,
+        "min_ms": 34.39,
+        "p05_ms": 34.4,
+        "p95_ms": 34.45,
+        "stddev_ms": 6.497531254469945
+      },
+      "run": 3,
+      "steady_steps": {
+        "count": 64,
+        "max_ms": 34.46,
+        "mean_ms": 34.41546875,
+        "median_ms": 34.41,
+        "min_ms": 34.39,
+        "p05_ms": 34.4,
+        "p95_ms": 34.45,
+        "stddev_ms": 0.016225561599105834
+      }
+    }
+  ],
+  "warmup_steps_discarded_per_run": 10
+}
